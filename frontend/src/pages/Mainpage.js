@@ -7,7 +7,7 @@ import {
   selectors as channelSelector,
 } from "../slices/channelsSlice";
 import {
-  addMessages,
+  // addMessages,
   selectors as messagesSelector,
 } from "../slices/messagesSlice";
 // import { normalize, schema } from "normalizr";
