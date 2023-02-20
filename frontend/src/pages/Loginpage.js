@@ -1,17 +1,44 @@
-import React from "react";
+import { React, useContext, useState } from "react";
 import { useFormik } from "formik";
-// import { useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const Login = () => {
+import { routes } from "../routes";
+import { AuthContext } from "../hooks/AuthorizeProvider";
+
+export const Login = () => {
+  const [error, setError] = useState("");
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currLocation = location.state ? location.state.from.pathname : "/";
+
+  const getAuth = (user) => {
+    const userId = JSON.parse(localStorage.getItem("userId"));
+    if (userId && userId.token) {
+      login(user);
+      navigate(currLocation);
+    }
+    return "";
+  };
+
   const formik = useFormik({
     initialValues: {
       username: "",
       password: "",
     },
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (formData) => {
+      try {
+        const response = await axios.post(routes.loginPath(), formData);
+        localStorage.setItem("userId", JSON.stringify(response.data));
+        getAuth(formik.values.username);
+      } catch (e) {
+        setError("Неверные имя пользователя или пароль");
+      }
     },
   });
+
   return (
     <div className="container-fluid bg-light">
       <div className="row justify-content-center align-content-center min-vh-100">
@@ -36,7 +63,7 @@ const Login = () => {
                     value={formik.values.username}
                     placeholder="Ваш ник"
                     id="username"
-                    className="form-control"
+                    className={`form-control ${error ? "is-invalid" : ""}`}
                   />
                   <label htmlFor="username">Ваш ник</label>
                 </div>
@@ -50,8 +77,16 @@ const Login = () => {
                     placeholder="Пароль"
                     type="password"
                     id="password"
-                    className="form-control"
+                    className={`form-control ${error ? "is-invalid" : ""}`}
                   />
+                  <div
+                    className="invalid-tooltip"
+                    style={{
+                      display: error ? "block" : "none",
+                    }}
+                  >
+                    {error}
+                  </div>
                   <label className="form-label" htmlFor="password">
                     Пароль
                   </label>
@@ -66,7 +101,8 @@ const Login = () => {
             </div>
             <div className="card-footer p-4">
               <div className="text-center">
-                <span>Нет аккаунта?</span> <a href="/signup">Регистрация</a>
+                <span>Нет аккаунта? </span>
+                <Link to="/signup"> Регистрация</Link>
               </div>
             </div>
           </div>
@@ -75,5 +111,3 @@ const Login = () => {
     </div>
   );
 };
-
-export default Login;

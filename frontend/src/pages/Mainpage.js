@@ -1,6 +1,40 @@
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import axios from "axios";
+import { React, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addChannels,
+  selectors as channelSelector,
+} from "../slices/channelsSlice";
+import {
+  addMessages,
+  selectors as messagesSelector,
+} from "../slices/messagesSlice";
+// import { normalize, schema } from "normalizr";
+import { routes } from "../routes";
 
-const Main = () => {
+export const Main = () => {
+  const [active, setActive] = useState(null);
+  const channels = useSelector(channelSelector.selectAll);
+  const messages = useSelector(messagesSelector.selectAll);
+  const { token } = JSON.parse(localStorage.getItem("userId"));
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchChannels = async () => {
+      const response = await axios
+        .get(routes.usersPath(), {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .catch((e) => console.log(e.message));
+      const { channels, messages, currentChannelId } = response.data;
+      setActive(currentChannelId);
+      dispatch(addChannels(channels));
+      dispatch(addChannels(messages));
+    };
+    fetchChannels();
+  }, [channels, messages]);
+
   return (
     <div className="d-flex flex-column bg-light">
       <div className="container my-4 rounded shadow">
@@ -26,22 +60,21 @@ const Main = () => {
               </button>
             </div>
             <ul className="nav flex-column nav-pills nav-fill px-2">
-              <li className="nav-item w-100">
-                <button
-                  type="button"
-                  className="w-100 rounded-0 text-start btn btn-secondary"
-                >
-                  <span className="me-1">#</span>general
-                </button>
-              </li>
-              <li className="nav-item w-100">
-                <button
-                  type="button"
-                  className="w-100 rounded-0 text-start btn"
-                >
-                  <span className="me-1">#</span>random
-                </button>
-              </li>
+              {channels.map(({ id, name }, i) => {
+                return (
+                  <li key={id} className="nav-item w-100">
+                    <button
+                      type="button"
+                      className={`w-100 rounded-0 text-start btn ${
+                        active === id ? "btn-secondary" : ""
+                      }`}
+                    >
+                      <span className="me-1">#</span>
+                      {name}
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           </div>
           <div className="col p-0 h-100">
@@ -64,7 +97,7 @@ const Main = () => {
                       aria-label="Новое сообщение"
                       placeholder="Введите сообщение..."
                       className="border-0 p-0 ps-2 form-control"
-                      value=""
+                      // value=""
                     />
                     <button type="submit" className="btn btn-group-vertical">
                       <svg
@@ -75,7 +108,7 @@ const Main = () => {
                         fill="currentColor"
                       >
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
                         ></path>
                       </svg>
@@ -91,5 +124,3 @@ const Main = () => {
     </div>
   );
 };
-
-export default Main;

@@ -4,7 +4,6 @@ const AuthContext = createContext(null);
 
 const AuthorizeProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-
   const login = (user) => {
     setUser(user);
   };

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Notfoundpage = () => {
+export const Notfound = () => {
   return (
     <div className="text-center">
       <img
@@ -16,5 +16,3 @@ const Notfoundpage = () => {
     </div>
   );
 };
-
-export default Notfoundpage;

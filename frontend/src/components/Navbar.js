@@ -1,13 +1,19 @@
-import React from "react";
+import { React, useContext } from "react";
+import { AuthContext } from "../hooks/AuthorizeProvider";
 
 const Navbar = () => {
+  const { logout } = useContext(AuthContext);
   return (
     <nav className="shadow-sm navbar bg-white">
       <div className="container">
         <a className="navbar-brand" href="/">
           Hexlet Chat
         </a>
-        <button type="button" className="btn btn-primary">
+        <button
+          type="button"
+          onClick={() => logout()}
+          className="btn btn-primary"
+        >
           Выйти
         </button>
       </div>
