@@ -3,9 +3,15 @@ import { React, useContext } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { AuthContext } from "../hooks/AuthorizeProvider";
+import axios from "axios";
+import { routes } from "../routes";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const SignUp = () => {
   const { login } = useContext(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const currLocation = location.state ? location.state.from.pathname : "/";
 
   const SignupSchema = Yup.object().shape({
     username: Yup.string()
@@ -29,8 +35,22 @@ export const SignUp = () => {
         confirmPassword: "",
       }}
       validationSchema={SignupSchema}
-      onSubmit={(formData) => {
-        fetch("");
+      onSubmit={async ({ username, password }) => {
+        try {
+          await axios
+            .post(routes.signupPath(), { username, password })
+            .then((response) => {
+              const { token, username } = response.data;
+              console.log(token);
+              if (token) {
+                login(username);
+                navigate(currLocation);
+              }
+              return "";
+            });
+        } catch (e) {
+          console.log(e.message);
+        }
       }}
     >
       {({ errors, touched }) => (

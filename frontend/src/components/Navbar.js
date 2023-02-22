@@ -1,7 +1,7 @@
 import { React, useContext } from "react";
 import { AuthContext } from "../hooks/AuthorizeProvider";
 
-const Navbar = () => {
+export const Navbar = () => {
   const { logout } = useContext(AuthContext);
   return (
     <nav className="shadow-sm navbar bg-white">
@@ -20,5 +20,3 @@ const Navbar = () => {
     </nav>
   );
 };
-
-export default Navbar;
