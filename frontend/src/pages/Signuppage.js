@@ -41,8 +41,8 @@ export const SignUp = () => {
             .post(routes.signupPath(), { username, password })
             .then((response) => {
               const { token, username } = response.data;
+              localStorage.setItem("userId", JSON.stringify(response.data));
               if (token) {
-                localStorage.setItem("userId", JSON.stringify(response.data));
                 login(username);
                 navigate(currLocation);
               }
