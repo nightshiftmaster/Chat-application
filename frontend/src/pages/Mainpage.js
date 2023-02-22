@@ -16,7 +16,7 @@ import {
 import { routes } from "../routes";
 import { io } from "socket.io-client";
 
-const socket = io("ws://localhost:3000");
+const socket = io();
 
 export const Main = () => {
   const [text, setText] = useState("");
@@ -127,9 +127,9 @@ export const Main = () => {
                   id="messages-box"
                   className="chat-messages overflow-auto px-5 "
                 >
-                  {messages.map(({ username, body }) => {
+                  {messages.map(({ username, body }, index) => {
                     return (
-                      <div className="text-break mb-2">
+                      <div className="text-break mb-2" key={index}>
                         <b>{username}</b>: {body}
                       </div>
                     );
