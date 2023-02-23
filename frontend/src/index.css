@@ -1,6 +1,6 @@
-@media (min-width: 1400px) {
-  .col-xxl-6 {
-    flex: 0 0 auto;
-    width: 50%;
+@media (min-width: 992px) {
+  .navbar-expand-lg {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
   }
 }

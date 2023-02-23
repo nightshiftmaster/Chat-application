@@ -13,20 +13,22 @@ const App = () => {
   return (
     <AuthorizeProvider>
       <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<SignUp />} />
-          <Route
-            path="/"
-            element={
-              <RequireAuth>
-                <Main />
-              </RequireAuth>
-            }
-          />
-          <Route path="*" element={<Notfound />} />
-        </Routes>
+        <div className="d-flex flex-column h-100">
+          <Navbar />
+          <Routes>
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route
+              path="/"
+              element={
+                <RequireAuth>
+                  <Main />
+                </RequireAuth>
+              }
+            />
+            <Route path="*" element={<Notfound />} />
+          </Routes>
+        </div>
       </BrowserRouter>
     </AuthorizeProvider>
   );

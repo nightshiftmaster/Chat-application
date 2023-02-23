@@ -52,6 +52,7 @@ export const Main = () => {
 
     socket.on("newMessage", (message) => {
       dispatch(addMessage(message));
+      setText("");
     });
 
     socket.emit("newMessage", {
