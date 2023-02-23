@@ -7,7 +7,7 @@ export const Navbar = () => {
     <nav className="shadow-sm navbar bg-white">
       <div className="container">
         <a className="navbar-brand" href="/">
-          Hexlet Chat
+          Общество Сабаководов Любителей
         </a>
         <button
           type="button"
