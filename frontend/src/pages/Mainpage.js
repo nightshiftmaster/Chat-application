@@ -21,7 +21,7 @@ const socket = io();
 
 export const Main = () => {
   const [text, setText] = useState("");
-  const [active, setActive] = useState({ id: 1, name: "general" });
+  const [activeChannel, setactiveChannel] = useState({});
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -29,6 +29,11 @@ export const Main = () => {
 
   const channels = useSelector(channelSelector.selectAll);
   const messages = useSelector(messagesSelector.selectAll);
+  const messagesPerChannel = messages.filter(
+    ({ channelId }) => channelId === activeChannel.id
+  );
+  console.log(messages);
+  console.log(channels);
   const { token, username } = JSON.parse(localStorage.getItem("userId"));
   const dispatch = useDispatch();
 
@@ -39,8 +44,8 @@ export const Main = () => {
           headers: { Authorization: `Bearer ${token}` },
         })
         .catch((e) => console.log(e.message));
-      const { channels, messages } = response.data;
-      // setActive(currentChannelId);
+      const { channels, messages, currentChannelId } = response.data;
+      setactiveChannel({ id: currentChannelId, name: "general" });
       dispatch(addChannels(channels));
       dispatch(addMessages(messages));
     };
@@ -52,12 +57,11 @@ export const Main = () => {
 
     socket.on("newMessage", (message) => {
       dispatch(addMessage(message));
-      setText("");
     });
 
     socket.emit("newMessage", {
       body: text,
-      channelId: 2,
+      channelId: activeChannel.id,
       username,
     });
   };
@@ -76,10 +80,10 @@ export const Main = () => {
       <ModalRules />
       <Modalwindow values={{ show, handleClose, handleAddChannel }} />
       <div className="container my-4 rounded shadow">
-        <div className="row min-vh-100 bg-white flex-md-row">
+        <div className="row bg-white flex-md-row" style={{ height: "90vh" }}>
           <div className="col-4 border-end pt-5 px-0 bg-light">
             <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
-              <span>Анальные Каналы</span>
+              <b>Каналы</b>
               <button
                 type="button"
                 onClick={() => handleShow()}
@@ -103,10 +107,10 @@ export const Main = () => {
                 return (
                   <li key={id} className="nav-item w-100">
                     <button
-                      onClick={() => setActive({ id, name })}
+                      onClick={() => setactiveChannel({ id, name })}
                       type="button"
                       className={`w-100 rounded-0 text-start text-truncate btn ${
-                        active.id === id ? "btn-secondary" : ""
+                        activeChannel.id === id ? "btn-secondary" : ""
                       }`}
                     >
                       <span className="me-1">#</span>
@@ -121,7 +125,7 @@ export const Main = () => {
             <div className="d-flex flex-column h-100">
               <div className="bg-light mb-4 p-3 shadow-sm small">
                 <p className="m-0">
-                  <b># {active.name}</b>
+                  <b># {activeChannel.name}</b>
                 </p>
                 <span className="text-muted">0 сообщений</span>
               </div>
@@ -129,7 +133,7 @@ export const Main = () => {
                 id="messages-box"
                 className="chat-messages overflow-auto px-5 "
               >
-                {messages.map(({ username, body }, index) => {
+                {messagesPerChannel.map(({ username, body }, index) => {
                   return (
                     <div className="text-break mb-2" key={index}>
                       <b>{username}</b>: {body}
