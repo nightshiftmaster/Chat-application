@@ -16,6 +16,7 @@ export const Login = () => {
 
   const getAuth = (user) => {
     const userId = JSON.parse(localStorage.getItem("userId"));
+
     if (userId && userId.token) {
       login(user);
       navigate(currLocation);

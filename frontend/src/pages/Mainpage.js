@@ -103,10 +103,10 @@ export const Main = () => {
                 return (
                   <li key={id} className="nav-item w-100">
                     <button
-                      onClick={() => setActive(id)}
+                      onClick={() => setActive({ id, name })}
                       type="button"
-                      className={`w-100 rounded-0 text-start btn ${
-                        active === id ? "btn-secondary" : ""
+                      className={`w-100 rounded-0 text-start text-truncate btn ${
+                        active.id === id ? "btn-secondary" : ""
                       }`}
                     >
                       <span className="me-1">#</span>
@@ -121,7 +121,7 @@ export const Main = () => {
             <div className="d-flex flex-column h-100">
               <div className="bg-light mb-4 p-3 shadow-sm small">
                 <p className="m-0">
-                  <b># general</b>
+                  <b># {active.name}</b>
                 </p>
                 <span className="text-muted">0 сообщений</span>
               </div>
