@@ -32,8 +32,6 @@ export const Main = () => {
   const messagesPerChannel = messages.filter(
     ({ channelId }) => channelId === activeChannel.id
   );
-  console.log(messages);
-  console.log(channels);
   const { token, username } = JSON.parse(localStorage.getItem("userId"));
   const dispatch = useDispatch();
 
@@ -50,7 +48,7 @@ export const Main = () => {
       dispatch(addMessages(messages));
     };
     fetchChannels();
-  }, [channels, messages]);
+  }, []);
 
   const handleSubmitMessage = (e) => {
     e.preventDefault();
@@ -64,6 +62,7 @@ export const Main = () => {
       channelId: activeChannel.id,
       username,
     });
+    setText("");
   };
 
   const handleAddChannel = (text) => (e) => {
@@ -80,7 +79,7 @@ export const Main = () => {
       <ModalRules />
       <Modalwindow values={{ show, handleClose, handleAddChannel }} />
       <div className="container my-4 rounded shadow">
-        <div className="row bg-white flex-md-row" style={{ height: "90vh" }}>
+        <div className="row bg-white flex-md-row" style={{ height: "85vh" }}>
           <div className="col-4 border-end pt-5 px-0 bg-light">
             <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
               <b>Каналы</b>
