@@ -21,7 +21,7 @@ const socket = io();
 
 export const Main = () => {
   const [text, setText] = useState("");
-  const [active, setActive] = useState(null);
+  const [active, setActive] = useState({ id: 1, name: "general" });
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -39,8 +39,8 @@ export const Main = () => {
           headers: { Authorization: `Bearer ${token}` },
         })
         .catch((e) => console.log(e.message));
-      const { channels, messages, currentChannelId } = response.data;
-      setActive(currentChannelId);
+      const { channels, messages } = response.data;
+      // setActive(currentChannelId);
       dispatch(addChannels(channels));
       dispatch(addMessages(messages));
     };
