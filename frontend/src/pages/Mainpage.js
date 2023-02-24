@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import { React, useEffect, useState } from "react";
-import { ModalRules } from "../components/Modalrules";
 import { useDispatch, useSelector } from "react-redux";
 import { Modalwindow } from "../components/Modal";
+import ReactScrollableFeed from "react-scrollable-feed";
 import {
   addChannels,
   addChannel,
@@ -76,7 +76,6 @@ export const Main = () => {
 
   return (
     <div className="d-flex flex-column bg-light">
-      <ModalRules />
       <Modalwindow values={{ show, handleClose, handleAddChannel }} />
       <div className="container my-4 rounded shadow">
         <div className="row bg-white flex-md-row" style={{ height: "85vh" }}>
@@ -101,24 +100,26 @@ export const Main = () => {
                 <span className="visually-hidden">+</span>
               </button>
             </div>
-            <ul className="nav flex-column nav-pills nav-fill px-2">
-              {channels.map(({ id, name }) => {
-                return (
-                  <li key={id} className="nav-item w-100">
-                    <button
-                      onClick={() => setactiveChannel({ id, name })}
-                      type="button"
-                      className={`w-100 rounded-0 text-start text-truncate btn ${
-                        activeChannel.id === id ? "btn-secondary" : ""
-                      }`}
-                    >
-                      <span className="me-1">#</span>
-                      {name}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
+            <ReactScrollableFeed>
+              <ul className="nav flex-column nav-pills nav-fill px-2">
+                {channels.map(({ id, name }) => {
+                  return (
+                    <li key={id} className="nav-item w-100">
+                      <button
+                        onClick={() => setactiveChannel({ id, name })}
+                        type="button"
+                        className={`w-100 rounded-0 text-start text-truncate btn ${
+                          activeChannel.id === id ? "btn-secondary" : ""
+                        }`}
+                      >
+                        <span className="me-1">#</span>
+                        {name}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </ReactScrollableFeed>
           </div>
           <div className="col p-0 h-100">
             <div className="d-flex flex-column h-100">
@@ -128,18 +129,17 @@ export const Main = () => {
                 </p>
                 <span className="text-muted">0 сообщений</span>
               </div>
-              <div
-                id="messages-box"
-                className="chat-messages overflow-auto px-5 "
-              >
-                {messagesPerChannel.map(({ username, body }, index) => {
-                  return (
-                    <div className="text-break mb-2" key={index}>
-                      <b>{username}</b>: {body}
-                    </div>
-                  );
-                })}
-              </div>
+              <ReactScrollableFeed>
+                <div id="messages-box" className="chat-messages px-5">
+                  {messagesPerChannel.map((element, index) => {
+                    return (
+                      <div className="text-break mb-2" key={index}>
+                        <b>{element.username}</b>: {element.body}
+                      </div>
+                    );
+                  })}
+                </div>
+              </ReactScrollableFeed>
               <div className="mt-auto px-5 py-3">
                 <form
                   className="py-1 border rounded-2 "
