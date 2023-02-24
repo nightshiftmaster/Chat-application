@@ -65,21 +65,24 @@ export const Main = () => {
     setText("");
   };
 
-  const handleAddChannel = (text) => (e) => {
-    e.preventDefault();
-    socket.on("newChannel", (payload) => {
-      dispatch(addChannel(payload));
-    });
-    socket.emit("newChannel", { name: text });
-    handleClose();
-  };
+  const handleAddChannel =
+    (text, { setText }) =>
+    (e) => {
+      e.preventDefault();
+      socket.on("newChannel", (payload) => {
+        dispatch(addChannel(payload));
+      });
+      socket.emit("newChannel", { name: text });
+      handleClose();
+      setText("");
+    };
 
   return (
     <div className="d-flex flex-column bg-light">
       <Modalwindow values={{ show, handleClose, handleAddChannel }} />
       <div className="container my-4 rounded shadow">
         <div className="row bg-white flex-md-row" style={{ height: "85vh" }}>
-          <div className="col-4 border-end pt-5 px-0 bg-light">
+          <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
             <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
               <b>Каналы</b>
               <button
@@ -101,10 +104,10 @@ export const Main = () => {
               </button>
             </div>
             <ReactScrollableFeed>
-              <ul className="nav flex-column nav-pills nav-fill px-2">
+              <ul className="nav flex-column nav-pills nav-fill px-2 mb-3  d-block">
                 {channels.map(({ id, name }) => {
                   return (
-                    <li key={id} className="nav-item w-100">
+                    <li key={id} className="nav-item">
                       <button
                         onClick={() => setactiveChannel({ id, name })}
                         type="button"
@@ -121,6 +124,7 @@ export const Main = () => {
               </ul>
             </ReactScrollableFeed>
           </div>
+
           <div className="col p-0 h-100">
             <div className="d-flex flex-column h-100">
               <div className="bg-light mb-4 p-3 shadow-sm small">

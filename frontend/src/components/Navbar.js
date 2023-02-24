@@ -9,7 +9,7 @@ export const Navbar = () => {
     <nav className="shadow-sm navbar bg-white">
       <div className="container">
         <a className="navbar-brand" href="/">
-          Общество Сабаководов
+          В Гостях у Владислава
         </a>
         <button
           hidden={hidden}

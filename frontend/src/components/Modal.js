@@ -19,7 +19,7 @@ export const Modalwindow = ({ values }) => {
         <Button variant="secondary" onClick={handleClose}>
           Отменить
         </Button>
-        <Button variant="primary" onClick={handleAddChannel(text)}>
+        <Button variant="primary" onClick={handleAddChannel(text, { setText })}>
           Отправить
         </Button>
       </Modal.Footer>
