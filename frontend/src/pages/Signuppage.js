@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { React, useContext } from "react";
+import { React, useContext, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { AuthContext } from "../hooks/AuthorizeProvider";
@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 export const SignUp = () => {
   const { login } = useContext(AuthContext);
+  const [serverError, setServerError] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   const currLocation = location.state ? location.state.from.pathname : "/";
@@ -49,7 +50,9 @@ export const SignUp = () => {
               return "";
             });
         } catch (e) {
-          console.log(e.message);
+          return e
+            ? setServerError("Такой пользователь уже существует")
+            : setServerError("");
         }
       }}
     >
@@ -73,7 +76,7 @@ export const SignUp = () => {
                         <Field
                           name="username"
                           className={`form-control ${
-                            touched.username && errors.username
+                            (touched.username && errors.username) || serverError
                               ? "is-invalid"
                               : ""
                           }`}
@@ -102,7 +105,7 @@ export const SignUp = () => {
                         <Field
                           name="password"
                           className={`form-control ${
-                            touched.password && errors.password
+                            (touched.password && errors.password) || serverError
                               ? "is-invalid"
                               : ""
                           }`}
@@ -129,7 +132,9 @@ export const SignUp = () => {
                         <Field
                           name="confirmPassword"
                           className={`form-control ${
-                            touched.confirmPassword && errors.confirmPassword
+                            (touched.confirmPassword &&
+                              errors.confirmPassword) ||
+                            serverError
                               ? "is-invalid"
                               : ""
                           }`}
@@ -141,12 +146,15 @@ export const SignUp = () => {
                           className="invalid-tooltip"
                           style={{
                             display:
-                              touched.confirmPassword && errors.confirmPassword
+                              (touched.confirmPassword &&
+                                errors.confirmPassword) ||
+                              serverError
                                 ? "block"
                                 : "none",
                           }}
                         >
                           {errors.confirmPassword}
+                          {serverError}
                         </div>
 
                         <label className="form-label" htmlFor="confirmPassword">
