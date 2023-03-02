@@ -1,12 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
+import Dropdown from "react-bootstrap/Dropdown";
 import { React, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Modalwindow } from "../components/Modal";
 import ReactScrollableFeed from "react-scrollable-feed";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   addChannels,
-  addChannel,
   selectors as channelSelector,
 } from "../slices/channelsSlice";
 import {
@@ -21,11 +23,13 @@ const socket = io();
 
 export const Main = () => {
   const [text, setText] = useState("");
-  const [activeChannel, setactiveChannel] = useState({});
+  const [modalAction, setModalAction] = useState("adding");
+  const [activeChannel, setActiveChannel] = useState({});
+  const [modalShown, setModalShow] = useState(false);
+  const [selectedChannel, setSelectedChannel] = useState({});
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleCloseModal = () => setModalShow(false);
+  const handleShowModal = () => setModalShow(true);
 
   const channels = useSelector(channelSelector.selectAll);
   const messages = useSelector(messagesSelector.selectAll);
@@ -43,7 +47,7 @@ export const Main = () => {
         })
         .catch((e) => console.log(e.message));
       const { channels, messages, currentChannelId } = response.data;
-      setactiveChannel({ id: currentChannelId, name: "general" });
+      setActiveChannel({ id: currentChannelId, name: "general" });
       dispatch(addChannels(channels));
       dispatch(addMessages(messages));
     };
@@ -52,7 +56,6 @@ export const Main = () => {
 
   const handleSubmitMessage = (e) => {
     e.preventDefault();
-
     socket.on("newMessage", (message) => {
       dispatch(addMessage(message));
     });
@@ -65,21 +68,18 @@ export const Main = () => {
     setText("");
   };
 
-  const handleAddChannel =
-    (text, { setText }) =>
-    (e) => {
-      e.preventDefault();
-      socket.on("newChannel", (payload) => {
-        dispatch(addChannel(payload));
-      });
-      socket.emit("newChannel", { name: text });
-      handleClose();
-      setText("");
-    };
-
   return (
     <div className="d-flex flex-column bg-light">
-      <Modalwindow values={{ show, handleClose, handleAddChannel }} />
+      <Modalwindow
+        values={{
+          modalShown,
+          modalAction,
+          handleCloseModal,
+          selectedChannel,
+          setActiveChannel,
+        }}
+      />
+      <ToastContainer />
       <div className="container my-4 rounded shadow">
         <div className="row bg-white flex-md-row" style={{ height: "85vh" }}>
           <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
@@ -87,7 +87,10 @@ export const Main = () => {
               <b>Каналы</b>
               <button
                 type="button"
-                onClick={() => handleShow()}
+                onClick={() => {
+                  setModalAction("adding");
+                  handleShowModal();
+                }}
                 className="p-0 text-primary btn btn-group-vertical"
               >
                 <svg
@@ -105,19 +108,57 @@ export const Main = () => {
             </div>
             <ReactScrollableFeed>
               <ul className="nav flex-column nav-pills nav-fill px-2 mb-3  d-block">
-                {channels.map(({ id, name }) => {
+                {channels.map(({ id, name, removable }) => {
                   return (
-                    <li key={id} className="nav-item">
-                      <button
-                        onClick={() => setactiveChannel({ id, name })}
-                        type="button"
-                        className={`w-100 rounded-0 text-start text-truncate btn ${
-                          activeChannel.id === id ? "btn-secondary" : ""
-                        }`}
+                    <li key={id} className="nav-item w-100">
+                      <div
+                        role="group"
+                        className="d-flex show dropdown btn-group"
                       >
-                        <span className="me-1">#</span>
-                        {name}
-                      </button>
+                        <button
+                          onClick={() =>
+                            setActiveChannel({ id, name, removable })
+                          }
+                          type="button"
+                          className={`w-100 rounded-0 text-start text-truncate btn ${
+                            activeChannel.id === id ? "btn-secondary" : ""
+                          }`}
+                        >
+                          <span className="me-1">#</span>
+                          {name}
+                        </button>
+                        {removable ? (
+                          <Dropdown>
+                            <Dropdown.Toggle
+                              variant={
+                                activeChannel.id === id ? "secondary" : ""
+                              }
+                              id="dropdown-basic"
+                            ></Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                              <Dropdown.Item
+                                onClick={() => {
+                                  setModalAction("removing");
+                                  setSelectedChannel({ id, name, removable });
+                                  handleShowModal();
+                                }}
+                              >
+                                Удалить
+                              </Dropdown.Item>
+                              <Dropdown.Item
+                                onClick={() => {
+                                  setModalAction("renaming");
+                                  setSelectedChannel({ id, name, removable });
+                                  handleShowModal();
+                                }}
+                              >
+                                Переименовать
+                              </Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        ) : null}
+                      </div>
                     </li>
                   );
                 })}
@@ -131,7 +172,9 @@ export const Main = () => {
                 <p className="m-0">
                   <b># {activeChannel.name}</b>
                 </p>
-                <span className="text-muted">0 сообщений</span>
+                <span className="text-muted">
+                  {messagesPerChannel.length} сообщений
+                </span>
               </div>
               <ReactScrollableFeed>
                 <div id="messages-box" className="chat-messages px-5">

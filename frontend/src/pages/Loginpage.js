@@ -3,6 +3,8 @@ import { useFormik } from "formik";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { routes } from "../routes";
 import { AuthContext } from "../hooks/AuthorizeProvider";
@@ -13,6 +15,17 @@ export const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const currLocation = location.state ? location.state.from.pathname : "/";
+
+  const errors = {
+    ERR_NETWORK: () => {
+      toast.error("Ошибка соединения!", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    },
+    ERR_BAD_REQUEST: () => {
+      setError("Неверные имя пользователя или пароль");
+    },
+  };
 
   const getAuth = (user) => {
     const userId = JSON.parse(localStorage.getItem("userId"));
@@ -35,13 +48,14 @@ export const Login = () => {
         localStorage.setItem("userId", JSON.stringify(response.data));
         getAuth(formik.values.username);
       } catch (e) {
-        setError("Неверные имя пользователя или пароль");
+        errors[e.code]();
       }
     },
   });
 
   return (
     <div className="container-fluid bg-light h-100">
+      <ToastContainer />
       <div className="row justify-content-center align-content-center min-vh-100">
         <div className="col-xxl-6">
           <div className="card shadow-sm">
