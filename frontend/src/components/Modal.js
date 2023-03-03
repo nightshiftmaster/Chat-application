@@ -26,6 +26,7 @@ export const Modalwindow = ({ values }) => {
   } = values;
   const [text, setText] = useState("");
   const [error, setError] = useState("");
+  const [disabled, setDisabled] = useState(false);
   const formElement = useRef(null);
   const dispatch = useDispatch();
   const alreadyExists = useSelector(channelSelector.selectAll).map(
@@ -40,6 +41,7 @@ export const Modalwindow = ({ values }) => {
     .notOneOf(alreadyExists, "Должно быть уникальным");
 
   const handleAdd = async () => {
+    setDisabled(!disabled);
     try {
       await schema.validate(text);
       socket.on("newChannel", (payload) => {
@@ -53,12 +55,15 @@ export const Modalwindow = ({ values }) => {
       handleCloseModal();
       setText("");
       setError("");
+      setDisabled(disabled);
     } catch (e) {
       setError(e.message);
+      setDisabled(disabled);
     }
   };
 
   const handleRename = async () => {
+    setDisabled(!disabled);
     try {
       await schema.validate(text);
       socket.on("renameChannel", (payload) => {
@@ -69,12 +74,15 @@ export const Modalwindow = ({ values }) => {
       handleCloseModal();
       setText("");
       setError("");
+      setDisabled(disabled);
     } catch (e) {
       setError(e.message);
+      setDisabled(disabled);
     }
   };
 
   const handleRemove = () => {
+    setDisabled(!disabled);
     socket.on("removeChannel", (payload) => {
       dispatch(removeChannel(payload));
     });
@@ -82,9 +90,11 @@ export const Modalwindow = ({ values }) => {
     toast.success("Канал удалён", {
       position: toast.POSITION.TOP_RIGHT,
     });
+
     setActiveChannel({ id: 1, name: "general" });
     handleCloseModal();
     setText("");
+    setDisabled(disabled);
   };
 
   useEffect(() => {
@@ -109,7 +119,7 @@ export const Modalwindow = ({ values }) => {
         </>
       ),
       button: (
-        <Button variant="primary" onClick={handleAdd}>
+        <Button variant="primary" onClick={handleAdd} disabled={disabled}>
           Отправить
         </Button>
       ),
@@ -118,7 +128,7 @@ export const Modalwindow = ({ values }) => {
       title: "Удалить канал",
       body: <p className="lead">Уверены?</p>,
       button: (
-        <Button variant="danger" onClick={handleRemove}>
+        <Button variant="danger" onClick={handleRemove} disabled={disabled}>
           Удалить
         </Button>
       ),
@@ -136,7 +146,7 @@ export const Modalwindow = ({ values }) => {
         />
       ),
       button: (
-        <Button variant="primary" onClick={handleRename}>
+        <Button variant="primary" onClick={handleRename} disabled={disabled}>
           Отправить
         </Button>
       ),

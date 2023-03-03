@@ -11,6 +11,7 @@ import { AuthContext } from "../hooks/AuthorizeProvider";
 
 export const Login = () => {
   const [error, setError] = useState("");
+  const [disabled, setDisabled] = useState(false);
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,12 +44,15 @@ export const Login = () => {
       password: "",
     },
     onSubmit: async (formData) => {
+      setDisabled(!disabled);
       try {
         const response = await axios.post(routes.loginPath(), formData);
         localStorage.setItem("userId", JSON.stringify(response.data));
         getAuth(formik.values.username);
+        setDisabled(disabled);
       } catch (e) {
         errors[e.code]();
+        setDisabled(disabled);
       }
     },
   });
@@ -112,6 +116,7 @@ export const Login = () => {
                 <button
                   type="submit"
                   className="w-100 mb-3 btn btn-outline-primary"
+                  disabled={disabled}
                 >
                   Войти
                 </button>

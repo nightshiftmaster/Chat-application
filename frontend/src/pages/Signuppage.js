@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 export const SignUp = () => {
   const { login } = useContext(AuthContext);
   const [serverError, setServerError] = useState("");
+  const [disabled, setDisabled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const currLocation = location.state ? location.state.from.pathname : "/";
@@ -37,6 +38,7 @@ export const SignUp = () => {
       }}
       validationSchema={SignupSchema}
       onSubmit={async ({ username, password }) => {
+        setDisabled(!disabled);
         try {
           await axios
             .post(routes.signupPath(), { username, password })
@@ -46,13 +48,15 @@ export const SignUp = () => {
               if (token) {
                 login(username);
                 navigate(currLocation);
+                setDisabled(disabled);
               }
               return "";
             });
-        } catch (e) {
-          return e
+        } catch (error) {
+          error
             ? setServerError("Такой пользователь уже существует")
             : setServerError("");
+          setDisabled(disabled);
         }
       }}
     >
@@ -164,6 +168,7 @@ export const SignUp = () => {
                       <button
                         type="submit"
                         className="w-100 btn btn-outline-primary"
+                        disabled={disabled}
                       >
                         Зарегистрироваться
                       </button>

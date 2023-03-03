@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import Dropdown from "react-bootstrap/Dropdown";
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Modalwindow } from "../components/Modal";
 import ReactScrollableFeed from "react-scrollable-feed";
@@ -27,6 +27,7 @@ export const Main = () => {
   const [activeChannel, setActiveChannel] = useState({});
   const [modalShown, setModalShow] = useState(false);
   const [selectedChannel, setSelectedChannel] = useState({});
+  const inputRef = useRef(null);
 
   const handleCloseModal = () => setModalShow(false);
   const handleShowModal = () => setModalShow(true);
@@ -40,6 +41,7 @@ export const Main = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    inputRef.current.focus();
     const fetchChannels = async () => {
       const response = await axios
         .get(routes.usersPath(), {
@@ -52,7 +54,7 @@ export const Main = () => {
       dispatch(addMessages(messages));
     };
     fetchChannels();
-  }, []);
+  }, [messages]);
 
   const handleSubmitMessage = (e) => {
     e.preventDefault();
@@ -195,13 +197,18 @@ export const Main = () => {
                   <div className="input-group has-validation">
                     <input
                       name="body"
+                      ref={inputRef}
                       onChange={(e) => setText(e.target.value)}
                       aria-label="Новое сообщение"
                       placeholder="Введите сообщение..."
                       className="border-0 p-0 ps-2 form-control"
                       value={text}
                     />
-                    <button type="submit" className="btn btn-group-vertical">
+                    <button
+                      type="submit"
+                      className="btn btn-group-vertical"
+                      disabled={text.trim().length === 0}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 16 16"
