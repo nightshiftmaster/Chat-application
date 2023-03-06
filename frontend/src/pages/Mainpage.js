@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import Dropdown from "react-bootstrap/Dropdown";
-import { React, useEffect, useState, useRef } from "react";
+import { React, useEffect, useState, useRef, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Modalwindow } from "../components/Modal";
 import ReactScrollableFeed from "react-scrollable-feed";
@@ -18,6 +18,8 @@ import {
 } from "../slices/messagesSlice";
 import { routes } from "../routes";
 import { io } from "socket.io-client";
+import { useTranslation } from "react-i18next";
+import filter from "leo-profanity";
 
 const socket = io();
 
@@ -39,9 +41,13 @@ export const Main = () => {
   );
   const { token, username } = JSON.parse(localStorage.getItem("userId"));
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   useEffect(() => {
     inputRef.current.focus();
+  }, [messages]);
+
+  useEffect(() => {
     const fetchChannels = async () => {
       const response = await axios
         .get(routes.usersPath(), {
@@ -54,24 +60,27 @@ export const Main = () => {
       dispatch(addMessages(messages));
     };
     fetchChannels();
-  }, [messages]);
+  }, []);
 
   const handleSubmitMessage = (e) => {
     e.preventDefault();
+    filter.loadDictionary("ru");
+    const censoredText = filter.clean(text);
+
     socket.on("newMessage", (message) => {
       dispatch(addMessage(message));
     });
 
     socket.emit("newMessage", {
-      body: text,
+      body: censoredText,
       channelId: activeChannel.id,
       username,
     });
     setText("");
   };
 
-  return (
-    <div className="d-flex flex-column bg-light">
+  const modal = useMemo(() => {
+    return (
       <Modalwindow
         values={{
           modalShown,
@@ -81,12 +90,18 @@ export const Main = () => {
           setActiveChannel,
         }}
       />
+    );
+  }, [modalShown]);
+
+  return (
+    <div className="d-flex flex-column bg-light">
+      {modal}
       <ToastContainer />
       <div className="container my-4 rounded shadow">
         <div className="row bg-white flex-md-row" style={{ height: "85vh" }}>
           <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
             <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
-              <b>Каналы</b>
+              <b>{t("headers.channels_header")}</b>
               <button
                 type="button"
                 onClick={() => {
@@ -146,7 +161,7 @@ export const Main = () => {
                                   handleShowModal();
                                 }}
                               >
-                                Удалить
+                                {t("headers.dropDown_links.remove")}
                               </Dropdown.Item>
                               <Dropdown.Item
                                 onClick={() => {
@@ -155,7 +170,7 @@ export const Main = () => {
                                   handleShowModal();
                                 }}
                               >
-                                Переименовать
+                                {t("headers.dropDown_links.rename")}
                               </Dropdown.Item>
                             </Dropdown.Menu>
                           </Dropdown>
@@ -175,7 +190,9 @@ export const Main = () => {
                   <b># {activeChannel.name}</b>
                 </p>
                 <span className="text-muted">
-                  {messagesPerChannel.length} сообщений
+                  {t("messages_count.message", {
+                    count: messagesPerChannel.length,
+                  })}
                 </span>
               </div>
               <ReactScrollableFeed>
@@ -200,7 +217,7 @@ export const Main = () => {
                       ref={inputRef}
                       onChange={(e) => setText(e.target.value)}
                       aria-label="Новое сообщение"
-                      placeholder="Введите сообщение..."
+                      placeholder={t("placeholders.message_input")}
                       className="border-0 p-0 ps-2 form-control"
                       value={text}
                     />
@@ -221,7 +238,6 @@ export const Main = () => {
                           d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
                         ></path>
                       </svg>
-                      <span className="visually-hidden">Отправить</span>
                     </button>
                   </div>
                 </form>

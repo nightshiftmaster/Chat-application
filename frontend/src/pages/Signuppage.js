@@ -6,6 +6,7 @@ import { AuthContext } from "../hooks/AuthorizeProvider";
 import axios from "axios";
 import { routes } from "../routes";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export const SignUp = () => {
   const { login } = useContext(AuthContext);
@@ -14,18 +15,19 @@ export const SignUp = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const currLocation = location.state ? location.state.from.pathname : "/";
+  const { t } = useTranslation();
 
   const SignupSchema = Yup.object().shape({
     username: Yup.string()
-      .min(3, "От 3 до 20 символов")
-      .max(20, "От 3 до 20 символов")
-      .required("Обязательное поле"),
+      .min(3, t("errors_feedbacks.validate.name_length"))
+      .max(20, t("errors_feedbacks.validate.name_length"))
+      .required(t("errors_feedbacks.validate.field_required")),
     password: Yup.string()
-      .min(6, "Не менее 6 символов")
-      .required("Обязательное поле"),
+      .min(6, t("errors_feedbacks.validate.password_length"))
+      .required(t("errors_feedbacks.validate.field_required")),
     confirmPassword: Yup.string().oneOf(
       [Yup.ref("password"), null],
-      "Passwords must match"
+      t("errors_feedbacks.validate.passwords_did_match")
     ),
   });
 
@@ -54,7 +56,9 @@ export const SignUp = () => {
             });
         } catch (error) {
           error
-            ? setServerError("Такой пользователь уже существует")
+            ? setServerError(
+                t("errors_feedbacks.validate.userName_alreadyUsed")
+              )
             : setServerError("");
           setDisabled(disabled);
         }
@@ -75,7 +79,9 @@ export const SignUp = () => {
                   </div>
                   <Form className="w-50">
                     <div className="form-group">
-                      <h1 className="text-center mb-4">Регистрация</h1>
+                      <h1 className="text-center mb-4">
+                        {t("headers.signup_header")}
+                      </h1>
                       <div className="form-floating mb-3">
                         <Field
                           name="username"
@@ -89,7 +95,7 @@ export const SignUp = () => {
                           id="username"
                         />
                         <label className="form-label" htmlFor="username">
-                          Имя пользователя
+                          {t("placeholders.signup.name")}
                         </label>
                         {errors.username && touched.username && (
                           <div
@@ -129,7 +135,7 @@ export const SignUp = () => {
                           {errors.password}
                         </div>
                         <label className="form-label" htmlFor="password">
-                          Пароль
+                          {t("placeholders.signup.password")}
                         </label>
                       </div>
                       <div className="form-floating mb-4">
@@ -162,7 +168,7 @@ export const SignUp = () => {
                         </div>
 
                         <label className="form-label" htmlFor="confirmPassword">
-                          Подтвердите пароль
+                          {t("placeholders.signup.confirmPassword")}
                         </label>
                       </div>
                       <button
@@ -170,7 +176,7 @@ export const SignUp = () => {
                         className="w-100 btn btn-outline-primary"
                         disabled={disabled}
                       >
-                        Зарегистрироваться
+                        {t("buttons.registration")}
                       </button>
                     </div>
                   </Form>

@@ -13,6 +13,8 @@ import {
 import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 import * as yup from "yup";
+import { useTranslation } from "react-i18next";
+import filter from "leo-profanity";
 
 const socket = io();
 
@@ -29,27 +31,34 @@ export const Modalwindow = ({ values }) => {
   const [disabled, setDisabled] = useState(false);
   const formElement = useRef(null);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const alreadyExists = useSelector(channelSelector.selectAll).map(
     ({ name }) => name
   );
 
   const schema = yup
     .string()
-    .required("Обязательное поле")
-    .min(3, "От 3 до 20 символов")
-    .max(20, "От 3 до 20 символов")
-    .notOneOf(alreadyExists, "Должно быть уникальным");
+    .required(t("errors_feedbacks.validate.field_required"))
+    .min(3, t("errors_feedbacks.validate.name_length"))
+    .max(20, t("errors_feedbacks.validate.name_length"))
+    .notOneOf(
+      alreadyExists,
+      t("errors_feedbacks.validate.uniqueName_required")
+    );
+
+  filter.loadDictionary("ru");
+  const censoredText = filter.clean(text);
 
   const handleAdd = async () => {
     setDisabled(!disabled);
     try {
-      await schema.validate(text);
+      await schema.validate(censoredText);
       socket.on("newChannel", (payload) => {
         setActiveChannel(payload);
         dispatch(addChannel(payload));
       });
-      socket.emit("newChannel", { name: text });
-      toast.success("Канал создан", {
+      socket.emit("newChannel", { name: censoredText });
+      toast.success(t("errors_feedbacks.toasts.createChannel"), {
         position: toast.POSITION.TOP_RIGHT,
       });
       handleCloseModal();
@@ -65,12 +74,15 @@ export const Modalwindow = ({ values }) => {
   const handleRename = async () => {
     setDisabled(!disabled);
     try {
-      await schema.validate(text);
+      await schema.validate(censoredText);
       socket.on("renameChannel", (payload) => {
         const { id, name } = payload;
         dispatch(renameChannel({ id, changes: { name: name } }));
       });
-      socket.emit("renameChannel", { id: selectedChannel.id, name: text });
+      socket.emit("renameChannel", {
+        id: selectedChannel.id,
+        name: censoredText,
+      });
       handleCloseModal();
       setText("");
       setError("");
@@ -87,7 +99,7 @@ export const Modalwindow = ({ values }) => {
       dispatch(removeChannel(payload));
     });
     socket.emit("removeChannel", { id: selectedChannel.id });
-    toast.success("Канал удалён", {
+    toast.success(t("errors_feedbacks.toasts.removeChannel"), {
       position: toast.POSITION.TOP_RIGHT,
     });
 
@@ -99,11 +111,11 @@ export const Modalwindow = ({ values }) => {
 
   useEffect(() => {
     formElement.current?.focus();
-  });
+  }, [modalShown]);
 
   const modalByAction = {
     adding: {
-      title: "Добавить канал",
+      title: t("headers.modal.adding_header"),
       body: (
         <>
           <Form.Control
@@ -120,34 +132,38 @@ export const Modalwindow = ({ values }) => {
       ),
       button: (
         <Button variant="primary" onClick={handleAdd} disabled={disabled}>
-          Отправить
+          {t("buttons.modal.sent")}
         </Button>
       ),
     },
     removing: {
-      title: "Удалить канал",
-      body: <p className="lead">Уверены?</p>,
+      title: t("headers.modal.removing_header"),
+      body: <p className="lead">{t("headers.modal.removing_confirmation")}</p>,
       button: (
         <Button variant="danger" onClick={handleRemove} disabled={disabled}>
-          Удалить
+          {t("buttons.modal.remove")}
         </Button>
       ),
     },
     renaming: {
-      title: "Переиминовать канал",
+      title: t("headers.modal.renaming_header"),
       body: (
-        <Form.Control
-          ref={formElement}
-          defaultValue={selectedChannel.name}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) =>
-            e.key === "Enter" ? handleAdd() : setText(e.target.value)
-          }
-        />
+        <>
+          <Form.Control
+            className={error ? "is-invalid" : ""}
+            ref={formElement}
+            defaultValue={selectedChannel.name}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) =>
+              e.key === "Enter" ? handleRename() : setText(e.target.value)
+            }
+          />
+          <div className="invalid-feedback">{error}</div>
+        </>
       ),
       button: (
         <Button variant="primary" onClick={handleRename} disabled={disabled}>
-          Отправить
+          {t("buttons.modal.sent")}
         </Button>
       ),
     },
@@ -163,6 +179,7 @@ export const Modalwindow = ({ values }) => {
       onHide={() => {
         handleCloseModal();
         setText("");
+        setError("");
       }}
       centered={true}
     >
@@ -175,11 +192,12 @@ export const Modalwindow = ({ values }) => {
         <Button
           variant="secondary"
           onClick={() => {
+            setError("");
             handleCloseModal();
             setText("");
           }}
         >
-          Отменить
+          {t("buttons.modal.cancel")}
         </Button>
         {button}
       </Modal.Footer>

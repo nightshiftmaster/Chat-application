@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { routes } from "../routes";
 import { AuthContext } from "../hooks/AuthorizeProvider";
+import { useTranslation } from "react-i18next";
 
 export const Login = () => {
   const [error, setError] = useState("");
@@ -16,15 +17,16 @@ export const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const currLocation = location.state ? location.state.from.pathname : "/";
+  const { t } = useTranslation();
 
   const errors = {
     ERR_NETWORK: () => {
-      toast.error("Ошибка соединения!", {
+      toast.error(t("errors_feedbacks.toasts.network_error"), {
         position: toast.POSITION.TOP_RIGHT,
       });
     },
     ERR_BAD_REQUEST: () => {
-      setError("Неверные имя пользователя или пароль");
+      setError(t("errors_feedbacks.login.invalid_user"));
     },
   };
 
@@ -75,7 +77,9 @@ export const Login = () => {
                 className="col-12 col-md-6 mt-3 mt-mb-0"
                 onSubmit={formik.handleSubmit}
               >
-                <h1 className="text-center mb-4">Войти</h1>
+                <h1 className="text-center mb-4">
+                  {t("headers.login_header")}
+                </h1>
                 <div className="form-floating mb-4">
                   <input
                     name="username"
@@ -87,7 +91,9 @@ export const Login = () => {
                     id="username"
                     className={`form-control ${error ? "is-invalid" : ""}`}
                   />
-                  <label htmlFor="username">Ваш ник</label>
+                  <label htmlFor="username">
+                    {t("placeholders.login.name")}
+                  </label>
                 </div>
                 <div className="form-floating mb-4">
                   <input
@@ -110,7 +116,7 @@ export const Login = () => {
                     {error}
                   </div>
                   <label className="form-label" htmlFor="password">
-                    Пароль
+                    {t("placeholders.login.password")}
                   </label>
                 </div>
                 <button
@@ -118,14 +124,16 @@ export const Login = () => {
                   className="w-100 mb-3 btn btn-outline-primary"
                   disabled={disabled}
                 >
-                  Войти
+                  {t("buttons.login")}
                 </button>
               </form>
             </div>
             <div className="card-footer p-4">
               <div className="text-center">
-                <span>Нет аккаунта? </span>
-                <Link to="/signup"> Регистрация</Link>
+                <span>{t("createAccount_section.noaccount_text")}</span>
+                <Link to="/signup">
+                  {t("createAccount_section.registration_link")}
+                </Link>
               </div>
             </div>
           </div>
