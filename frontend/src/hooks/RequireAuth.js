@@ -5,7 +5,8 @@ import { AuthContext } from "./AuthorizeProvider";
 const RequireAuth = ({ children }) => {
   const { user } = useContext(AuthContext);
   const location = useLocation();
-  if (!user) {
+  const userId = JSON.parse(localStorage.getItem("userId"));
+  if (!user && !userId) {
     return <Navigate to="/login" state={{ from: location }} />;
   }
   return children;

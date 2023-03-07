@@ -1,6 +1,7 @@
 import { React, useContext, useState } from "react";
 import { AuthContext } from "../hooks/AuthorizeProvider";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 export const Navbar = () => {
   const { t, i18n } = useTranslation();
@@ -15,9 +16,9 @@ export const Navbar = () => {
   return (
     <nav className="shadow-sm navbar bg-white">
       <div className="container">
-        <a className="navbar-brand" href="/">
+        <Link className="navbar-brand" to="/">
           {t("headers.navbar_header")}
-        </a>
+        </Link>
         <div className="'flex">
           {Object.keys(lngs).map((lng, i) => (
             <button
@@ -39,7 +40,10 @@ export const Navbar = () => {
           <button
             hidden={hidden}
             type="button"
-            onClick={() => logout()}
+            onClick={() => {
+              logout();
+              localStorage.removeItem("userId");
+            }}
             className="btn btn-primary"
           >
             {t("buttons.logout")}

@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
 import Dropdown from "react-bootstrap/Dropdown";
-import { React, useEffect, useState, useRef, useMemo } from "react";
+import { React, useEffect, useState, useRef, useMemo, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { AuthContext } from "../hooks/AuthorizeProvider";
 import { Modalwindow } from "../components/Modal";
 import ReactScrollableFeed from "react-scrollable-feed";
 import { ToastContainer } from "react-toastify";
@@ -30,6 +31,7 @@ export const Main = () => {
   const [modalShown, setModalShow] = useState(false);
   const [selectedChannel, setSelectedChannel] = useState({});
   const inputRef = useRef(null);
+  const { login } = useContext(AuthContext);
 
   const handleCloseModal = () => setModalShow(false);
   const handleShowModal = () => setModalShow(true);
@@ -48,6 +50,7 @@ export const Main = () => {
   }, [messages]);
 
   useEffect(() => {
+    login(username);
     const fetchChannels = async () => {
       const response = await axios
         .get(routes.usersPath(), {

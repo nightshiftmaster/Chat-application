@@ -30,11 +30,10 @@ export const Login = () => {
     },
   };
 
-  const getAuth = (user) => {
+  const getAuth = () => {
     const userId = JSON.parse(localStorage.getItem("userId"));
-
-    if (userId && userId.token) {
-      login(user);
+    if (userId.username && userId.token) {
+      login(userId.username);
       navigate(currLocation);
     }
     return "";
@@ -50,7 +49,7 @@ export const Login = () => {
       try {
         const response = await axios.post(routes.loginPath(), formData);
         localStorage.setItem("userId", JSON.stringify(response.data));
-        getAuth(formik.values.username);
+        getAuth();
         setDisabled(disabled);
       } catch (e) {
         errors[e.code]();
