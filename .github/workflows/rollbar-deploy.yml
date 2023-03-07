@@ -1,10 +1,35 @@
-steps:
-  - name: Notify deploy to Rollbar
-    uses: rollbar/github-deploy-action@2.1.1
-    id: rollbar_deploy
-    with:
-      environment: "production"
-      version: ${{ github.sha }}
-    env:
-      ROLLBAR_ACCESS_TOKEN: ${{ 4a0b163990a24902bcfc430f475ab690 }}
-      ROLLBAR_USERNAME: ${{ nightshiftmaster }}
+jobs:
+  # This workflow builds source maps
+  build:
+    - uses: actions/checkout@v2
+    - name: npm run build
+      run: npm run build --prefix templates/static/
+    - uses: actions/upload-artifact@v2
+      with:
+        name: bundle.js.map
+        path: public/bundle.js.map
+    - uses: actions/upload-artifact@v2
+      with:
+        name: bundle2.js.map
+        path: public/bundle2.js.map
+  # This workflow deploys source maps to Rollbar
+  deploy:
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: bundle.js.map
+      - uses: actions/download-artifact@v2
+        with:
+          name: bundle2.js.map
+      - name: Rollbar deploy
+        uses: rollbar/github-deploy-action@2.1.1
+        with:
+          environment: production
+          version: ${{ github.sha }}
+          status: succeeded
+          source_maps: bundle.js.map bundle2.js.map
+          minified_urls: https://www.example.com/public/bundle.js https://www.example.com/public/bundle2.js
+        env:
+          ROLLBAR_ACCESS_TOKEN: ${{ 4a0b163990a24902bcfc430f475ab690 }}
