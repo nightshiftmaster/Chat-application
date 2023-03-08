@@ -3,37 +3,28 @@ name: Deploy to Rollbar
 on: push
 
 jobs:
-  # This workflow builds source maps
-  build:
-    - uses: actions/checkout@v2
-    - name: npm run build
-      run: npm run build --prefix templates/static/
-    - uses: actions/upload-artifact@v2
-      with:
-        name: bundle.js.map
-        path: public/bundle.js.map
-    - uses: actions/upload-artifact@v2
-      with:
-        name: bundle2.js.map
-        path: public/bundle2.js.map
-  # This workflow deploys source maps to Rollbar
   deploy:
-    needs: build
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
-        with:
-          name: bundle.js.map
-      - uses: actions/download-artifact@v2
-        with:
-          name: bundle2.js.map
-      - name: Rollbar deploy
+      - name: Notify deploy to Rollbar
         uses: rollbar/github-deploy-action@2.1.1
+        id: rollbar_deploy
         with:
-          environment: production
+          environment: "production"
           version: ${{ github.sha }}
-          status: succeeded
-          source_maps: bundle.js.map bundle2.js.map
-          minified_urls: https://www.example.com/public/bundle.js https://www.example.com/public/bundle2.js
         env:
           ROLLBAR_ACCESS_TOKEN: ${{ secrets.ROLLBAR_ACCESS_TOKEN }}
+          ROLLBAR_USERNAME: ${{ github.actor }}
+
+      - name: Notify finish deploy to Rollbar
+        uses: rollbar/github-deploy-action@2.1.1
+        id: rollbar_post_deploy
+        with:
+          environment: "production"
+          version: ${{ github.sha }}
+          status: "succeeded"
+        env:
+          ROLLBAR_ACCESS_TOKEN: ${{ secrets.ROLLBAR_ACCESS_TOKEN }}
+          ROLLBAR_USERNAME: ${{ github.actor }}
+          DEPLOY_ID: ${{ steps.rollbar_pre_deploy.outputs.deploy_id }}
