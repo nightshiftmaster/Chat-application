@@ -12,8 +12,8 @@ jobs:
 
       - name: Deploy to Rollbar
         uses: rollbar/rollbar-deploy-github-action@v2
+        repository: https://github.com/nightshiftmaster/frontend-project-12
         with:
-          repository: https://github.com/nightshiftmaster/frontend-project-12
           rollbarAccessToken: ${{ secrets.ROLLBAR_ACCESS_TOKEN }}
           environment: production
           revision: ${{ github.sha }}
