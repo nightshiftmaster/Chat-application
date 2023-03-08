@@ -1,19 +1,20 @@
-name: deploy
+name: Deploy to Rollbar
 
-on: push
+on:
+  release:
+    types: [created]
 
 jobs:
   deploy:
-    name: Build & Deployment
     runs-on: macos-10.14
 
-steps:
-  - name: Notify deploy to Rollbar
-    uses: rollbar/github-deploy-action@2.1.1
-    id: rollbar_deploy
-    with:
-      environment: "production"
-      version: ${{ github.sha }}
-    env:
-      ROLLBAR_ACCESS_TOKEN: ${{ c25695d18a2e4454ae98432b59249a0e }}
-      ROLLBAR_USERNAME: ${{ nightshiftmaster }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Deploy to Rollbar
+        uses: rollbar/rollbar-deploy-github-action@v1
+        with:
+          rollbarAccessToken: ${{ c25695d18a2e4454ae98432b59249a0e }}
+          environment: production
+          revision: ${{ nightshiftmaster }}
