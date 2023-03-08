@@ -1,5 +1,6 @@
 steps:
   - name: Notify deploy to Rollbar
+    on: push
     uses: rollbar/github-deploy-action@2.1.1
     id: rollbar_deploy
     with:
