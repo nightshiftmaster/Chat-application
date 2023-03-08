@@ -1,0 +1,20 @@
+name: Deploy to Rollbar
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Deploy to Rollbar
+        uses: rollbar/rollbar-deploy-github-action@v1
+        with:
+          rollbarAccessToken: ${{ secrets.ROLLBAR_ACCESS_TOKEN }}
+          environment: production
+          revision: ${{ github.sha }}
