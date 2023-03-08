@@ -1,5 +1,7 @@
 import App from "./App";
 
+import store from "./slices";
+import { Provider as ReduxProvider } from "react-redux";
 import "./i18n";
 import { Provider, ErrorBoundary } from "@rollbar/react";
 
@@ -12,7 +14,9 @@ const init = async () => {
   return (
     <Provider config={rollbarConfig}>
       <ErrorBoundary>
-        <App />
+        <ReduxProvider store={store}>
+          <App />
+        </ReduxProvider>
       </ErrorBoundary>
     </Provider>
   );
