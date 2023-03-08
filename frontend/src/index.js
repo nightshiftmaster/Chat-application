@@ -4,7 +4,7 @@ import "./index.css";
 import init from "./init";
 import { Provider, ErrorBoundary } from "@rollbar/react";
 
-var rollbarConfig = {
+const rollbarConfig = {
   accessToken: "f7631b7d3d50493083cb2438ac4c5681",
   environment: "production",
 };
