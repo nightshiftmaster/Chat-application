@@ -14,6 +14,6 @@ jobs:
         uses: rollbar/github-deploy-action@2.1.1
 
         with:
-          rollbarAccessToken: ${{ secrets.ROLLBAR_ACCESS_TOKEN }}
+          rollbarAccessToken: ${{ f7631b7d3d50493083cb2438ac4c5681 }}
           environment: production
           revision: ${{ github.sha }}
