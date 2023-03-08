@@ -1,8 +1,5 @@
 name: Deploy to Rollbar
 
-runs:
-  using: "node16"
-
 on: push
 
 jobs:
