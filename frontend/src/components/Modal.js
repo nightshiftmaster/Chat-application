@@ -127,7 +127,7 @@ export const Modalwindow = ({ values }) => {
               e.key === "Enter" ? handleAdd() : setText(e.target.value)
             }
           />
-          <label className="visually-hidden" for="name">
+          <label className="visually-hidden" htmlFor="name">
             Имя канала
           </label>
           <div className="invalid-feedback">{error}</div>
