@@ -58,13 +58,6 @@ export const Modalwindow = ({ values }) => {
         dispatch(addChannel(payload));
       });
       socket.emit("newChannel", { name: censoredText });
-      toast.success(t("errors_feedbacks.toasts.createChannel"), {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-      handleCloseModal();
-      setText("");
-      setError("");
-      setDisabled(disabled);
     } catch (e) {
       setError(e.message);
       setDisabled(disabled);
@@ -125,7 +118,18 @@ export const Modalwindow = ({ values }) => {
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={async (e) =>
-              e.key === "Enter" ? await handleAdd() : setText(e.target.value)
+              e.key === "Enter"
+                ? handleAdd().then((response) => {
+                    console.log(response);
+                    toast.success(t("errors_feedbacks.toasts.createChannel"), {
+                      position: toast.POSITION.TOP_RIGHT,
+                    });
+                    handleCloseModal();
+                    setText("");
+                    setError("");
+                    setDisabled(disabled);
+                  })
+                : setText(e.target.value)
             }
           />
           <label className="visually-hidden" htmlFor="name">
