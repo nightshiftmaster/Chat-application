@@ -157,24 +157,24 @@ export const Main = () => {
                             ></Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                              <Dropdown.Item
-                                onClick={() => {
-                                  setModalAction("removing");
-                                  setSelectedChannel({ id, name, removable });
-                                  handleShowModal();
-                                }}
-                              >
-                                {t("headers.dropDown_links.remove")}
-                              </Dropdown.Item>
-                              <Dropdown.Item
-                                onClick={() => {
-                                  setModalAction("renaming");
-                                  setSelectedChannel({ id, name, removable });
-                                  handleShowModal();
-                                }}
-                              >
-                                {t("headers.dropDown_links.rename")}
-                              </Dropdown.Item>
+                              {["removing", "renaming"].map((item) => {
+                                return (
+                                  <Dropdown.Item
+                                    key={item}
+                                    onClick={() => {
+                                      setModalAction(item);
+                                      setSelectedChannel({
+                                        id,
+                                        name,
+                                        removable,
+                                      });
+                                      handleShowModal();
+                                    }}
+                                  >
+                                    {t(`headers.dropDown_links.${item}`)}
+                                  </Dropdown.Item>
+                                );
+                              })}
                             </Dropdown.Menu>
                           </Dropdown>
                         ) : null}

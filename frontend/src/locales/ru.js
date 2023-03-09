@@ -14,8 +14,8 @@ export default {
         removing_confirmation: "Уверены?",
       },
       dropDown_links: {
-        remove: "Удалить",
-        rename: "Переиминовать",
+        removing: "Удалить",
+        renaming: "Переиминовать",
       },
     },
 
@@ -35,7 +35,7 @@ export default {
         password: "Пароль",
       },
       signup: {
-        name: "Имя пользователя",
+        username: "Имя пользователя",
         password: "Пароль",
         confirmPassword: "Подтвердите пароль",
       },

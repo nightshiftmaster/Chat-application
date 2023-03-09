@@ -64,7 +64,7 @@ export const SignUp = () => {
         }
       }}
     >
-      {({ errors, touched }) => (
+      {({ errors, touched, values }) => (
         <div className="container-fluid bg-light">
           <div className="row justify-content-center align-content-center min-vh-100">
             <div className="col-12 col-md-8 col-xxl-6">
@@ -82,95 +82,41 @@ export const SignUp = () => {
                       <h1 className="text-center mb-4">
                         {t("headers.signup_header")}
                       </h1>
-                      <div className="form-floating mb-3">
-                        <Field
-                          name="username"
-                          className={`form-control ${
-                            (touched.username && errors.username) || serverError
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          autoComplete="username"
-                          required
-                          id="username"
-                        />
-                        <label className="form-label" htmlFor="username">
-                          {t("placeholders.signup.name")}
-                        </label>
-                        {errors.username && touched.username && (
+                      {Object.keys(values).map((fieldName) => (
+                        <div className="form-floating mb-3" key={fieldName}>
+                          <Field
+                            name={fieldName}
+                            className={`form-control ${
+                              (touched[fieldName] && errors[fieldName]) ||
+                              serverError
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            autoComplete={fieldName}
+                            required
+                            id={fieldName}
+                          />
                           <div
                             className="invalid-tooltip"
                             style={{
                               display:
-                                touched.username && errors.username
+                                (touched[fieldName] && errors[fieldName]) ||
+                                serverError
                                   ? "block"
                                   : "none",
                             }}
                           >
-                            {errors.username}
+                            {fieldName === "confirmPassword"
+                              ? errors[fieldName] || serverError
+                              : errors[fieldName]}
                           </div>
-                        )}
-                      </div>
-                      <div className="form-floating mb-3">
-                        <Field
-                          name="password"
-                          className={`form-control ${
-                            (touched.password && errors.password) || serverError
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          autoComplete="password"
-                          required
-                          id="password"
-                        />
-                        <div
-                          className="invalid-tooltip"
-                          style={{
-                            display:
-                              touched.password && errors.password
-                                ? "block"
-                                : "none",
-                          }}
-                        >
-                          {errors.password}
-                        </div>
-                        <label className="form-label" htmlFor="password">
-                          {t("placeholders.signup.password")}
-                        </label>
-                      </div>
-                      <div className="form-floating mb-4">
-                        <Field
-                          name="confirmPassword"
-                          className={`form-control ${
-                            (touched.confirmPassword &&
-                              errors.confirmPassword) ||
-                            serverError
-                              ? "is-invalid"
-                              : ""
-                          }`}
-                          autoComplete="confirmPassword"
-                          required
-                          id="confirmPassword"
-                        />
-                        <div
-                          className="invalid-tooltip"
-                          style={{
-                            display:
-                              (touched.confirmPassword &&
-                                errors.confirmPassword) ||
-                              serverError
-                                ? "block"
-                                : "none",
-                          }}
-                        >
-                          {errors.confirmPassword}
-                          {serverError}
-                        </div>
 
-                        <label className="form-label" htmlFor="confirmPassword">
-                          {t("placeholders.signup.confirmPassword")}
-                        </label>
-                      </div>
+                          <label className="form-label" htmlFor={fieldName}>
+                            {t(`placeholders.signup.${fieldName}`)}
+                          </label>
+                        </div>
+                      ))}
+
                       <button
                         type="submit"
                         className="w-100 btn btn-outline-primary"

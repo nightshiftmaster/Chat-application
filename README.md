@@ -2,7 +2,6 @@
 
 [![Actions Status](https://github.com/nightshiftmaster/frontend-project-12/workflows/hexlet-check/badge.svg)](https://github.com/nightshiftmaster/frontend-project-12/actions)
 <a href="https://codeclimate.com/github/nightshiftmaster/frontend-project-12/maintainability"><img src="https://api.codeclimate.com/v1/badges/f16f950565bd63490a1d/maintainability" /></a>
-<a href="https://codeclimate.com/github/nightshiftmaster/frontend-project-12/test_coverage"><img src="https://api.codeclimate.com/v1/badges/f16f950565bd63490a1d/test_coverage" /></a>
 
 ## About:
 
