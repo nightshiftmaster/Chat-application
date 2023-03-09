@@ -62,7 +62,7 @@ export const Modalwindow = ({ values }) => {
         position: toast.POSITION.TOP_RIGHT,
       });
       handleCloseModal();
-      setText("");
+      // setText("");
       setError("");
       setDisabled(disabled);
     } catch (e) {
