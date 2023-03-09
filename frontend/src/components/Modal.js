@@ -47,7 +47,7 @@ export const Modalwindow = ({ values }) => {
     );
 
   filter.loadDictionary("ru");
-  const censoredText = filter.clean(text);
+  const censoredText = filter.clean(text.trim());
 
   const handleAdd = async () => {
     setDisabled(!disabled);
