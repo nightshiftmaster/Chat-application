@@ -120,6 +120,7 @@ export const Modalwindow = ({ values }) => {
         <>
           <Form.Control
             className={error ? "is-invalid" : ""}
+            name="name"
             ref={formElement}
             value={text}
             onChange={(e) => setText(e.target.value)}
