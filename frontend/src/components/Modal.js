@@ -138,7 +138,11 @@ export const Modalwindow = ({ values }) => {
     },
     removing: {
       title: t("headers.modal.removing_header"),
-      body: <p className="lead">{t("headers.modal.removing_confirmation")}</p>,
+      body: (
+        <div className="container">
+          <p className="lead">{t("headers.modal.removing_confirmation")}</p>
+        </div>
+      ),
       button: (
         <Button variant="danger" onClick={handleRemove} disabled={disabled}>
           {t("buttons.modal.remove")}

@@ -11,7 +11,7 @@ export default {
         adding_header: "Добавить канал",
         removing_header: "Удалить канал",
         renaming_header: "Переиминовать канал",
-        removing_confirmation: "Уверены",
+        removing_confirmation: "Уверены?",
       },
       dropDown_links: {
         remove: "Удалить",
@@ -71,7 +71,7 @@ export default {
     },
 
     notfound_page: {
-      text: "Но вы можете перейти",
+      text: "Но вы можете перейти  ",
       link_to_main: "на главную страницу",
     },
   },
