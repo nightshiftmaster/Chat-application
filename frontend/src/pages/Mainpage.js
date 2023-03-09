@@ -63,7 +63,7 @@ export const Main = () => {
       dispatch(addMessages(messages));
     };
     fetchChannels();
-  }, [channels]);
+  }, []);
 
   const handleSubmitMessage = (e) => {
     e.preventDefault();
