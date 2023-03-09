@@ -124,8 +124,8 @@ export const Modalwindow = ({ values }) => {
             ref={formElement}
             value={text}
             onChange={(e) => setText(e.target.value)}
-            onKeyDown={async (e) =>
-              e.key === "Enter" ? await handleAdd() : setText(e.target.value)
+            onKeyDown={(e) =>
+              e.key === "Enter" ? handleAdd() : setText(e.target.value)
             }
           />
           <label className="visually-hidden" htmlFor="name">
