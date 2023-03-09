@@ -58,11 +58,8 @@ export const Modalwindow = ({ values }) => {
         dispatch(addChannel(payload));
       });
       socket.emit("newChannel", { name: censoredText });
-      toast.success(t("errors_feedbacks.toasts.createChannel"), {
-        position: toast.POSITION.TOP_RIGHT,
-      });
       handleCloseModal();
-      // setText("");
+      setText("");
       setError("");
       setDisabled(disabled);
     } catch (e) {
@@ -123,7 +120,15 @@ export const Modalwindow = ({ values }) => {
             name="name"
             ref={formElement}
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e) =>
+              e.key === "Enter"
+                ? handleAdd().then((response) =>
+                    toast.success(t("errors_feedbacks.toasts.createChannel"), {
+                      position: toast.POSITION.TOP_RIGHT,
+                    })
+                  )
+                : setText(e.target.value)
+            }
             onKeyDown={(e) =>
               e.key === "Enter" ? handleAdd() : setText(e.target.value)
             }
