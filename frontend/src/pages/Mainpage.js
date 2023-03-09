@@ -63,7 +63,7 @@ export const Main = () => {
       dispatch(addMessages(messages));
     };
     fetchChannels();
-  }, [channels]);
+  }, []);
 
   const handleSubmitMessage = (e) => {
     e.preventDefault();
@@ -154,7 +154,11 @@ export const Main = () => {
                                 activeChannel.id === id ? "secondary" : ""
                               }
                               id="dropdown-basic"
-                            ></Dropdown.Toggle>
+                            >
+                              <span className="visually-hidden">
+                                Управление каналом
+                              </span>
+                            </Dropdown.Toggle>
 
                             <Dropdown.Menu>
                               {["removing", "renaming"].map((item) => {
