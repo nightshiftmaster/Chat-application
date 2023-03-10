@@ -55,10 +55,12 @@ const SignUp = () => {
               return '';
             });
         } catch (error) {
+          // eslint-disable-next-line no-unused-expressions
           setServerError(
-          t('errors_feedbacks.validate.userName_alreadyUsed')),
+            t('errors_feedbacks.validate.userName_alreadyUsed')
+          )
           setDisabled(disabled);
-        };
+        }
       }}
     >
       {({ errors, touched, values }) => (
