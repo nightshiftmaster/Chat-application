@@ -26,7 +26,7 @@ import routes from '../routes';
 
 const socket = io();
 
-export const Main = () => {
+const Main = () => {
   const [text, setText] = useState('');
   const [modalAction, setModalAction] = useState('adding');
   const [activeChannel, setActiveChannel] = useState({});
@@ -65,6 +65,7 @@ export const Main = () => {
       dispatch(addMessages(messages));
     };
     fetchChannels();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const handleSubmitMessage = (e) => {
@@ -94,6 +95,7 @@ export const Main = () => {
         setActiveChannel,
       }}
     />
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   ), [modalShown]);
 
   return (
@@ -255,4 +257,6 @@ export const Main = () => {
       </div>
     </div>
   );
-}
+};
+
+export default Main;

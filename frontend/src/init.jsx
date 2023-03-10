@@ -4,9 +4,9 @@ import store from './slices';
 import './i18n';
 
 const init = async () => (
-    <Provider store={store}>
-      <App />
-    </Provider>
-  );
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
 
 export default init;

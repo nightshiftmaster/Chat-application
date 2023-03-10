@@ -54,13 +54,14 @@ const SignUp = () => {
               }
               return '';
             });
-        } catch (error) {
+        } catch (error)  {
           error
             ? setServerError(
               t('errors_feedbacks.validate.userName_alreadyUsed'),
             )
             : setServerError('');
           setDisabled(disabled);
+          return 
         }
       }}
     >

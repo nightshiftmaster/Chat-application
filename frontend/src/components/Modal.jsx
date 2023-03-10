@@ -216,4 +216,4 @@ const Modalwindow = ({ values }) => {
   );
 };
 
-export default Modalwindow
+export default Modalwindow;
