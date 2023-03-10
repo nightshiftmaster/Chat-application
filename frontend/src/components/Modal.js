@@ -127,7 +127,7 @@ export const Modalwindow = ({ values }) => {
             ref={formElement}
             value={text}
             onChange={(e) => setText(e.target.value)}
-            onKeyPress={(e) =>
+            onKeyDown={(e) =>
               e.key === "Enter" ? handleAdd() : setText(e.target.value)
             }
           />
@@ -158,7 +158,7 @@ export const Modalwindow = ({ values }) => {
       body: (
         <>
           <Form.Label className="visually-hidden" htmlFor="renameInput">
-            Переименовать
+            Имя канала
           </Form.Label>
           <Form.Control
             className={error ? "is-invalid" : ""}
