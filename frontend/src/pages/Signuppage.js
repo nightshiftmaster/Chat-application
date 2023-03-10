@@ -1,42 +1,42 @@
 /* eslint-disable no-unused-vars */
-import { React, useContext, useState } from "react";
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
-import { AuthContext } from "../hooks/AuthorizeProvider";
-import axios from "axios";
-import { routes } from "../routes";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { React, useContext, useState } from 'react';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
+import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { routes } from '../routes';
+import { AuthContext } from '../hooks/AuthorizeProvider';
 
 export const SignUp = () => {
   const { login } = useContext(AuthContext);
-  const [serverError, setServerError] = useState("");
+  const [serverError, setServerError] = useState('');
   const [disabled, setDisabled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const currLocation = location.state ? location.state.from.pathname : "/";
+  const currLocation = location.state ? location.state.from.pathname : '/';
   const { t } = useTranslation();
 
   const SignupSchema = Yup.object().shape({
     username: Yup.string()
-      .min(3, t("errors_feedbacks.validate.name_length"))
-      .max(20, t("errors_feedbacks.validate.name_length"))
-      .required(t("errors_feedbacks.validate.field_required")),
+      .min(3, t('errors_feedbacks.validate.name_length'))
+      .max(20, t('errors_feedbacks.validate.name_length'))
+      .required(t('errors_feedbacks.validate.field_required')),
     password: Yup.string()
-      .min(6, t("errors_feedbacks.validate.password_length"))
-      .required(t("errors_feedbacks.validate.field_required")),
+      .min(6, t('errors_feedbacks.validate.password_length'))
+      .required(t('errors_feedbacks.validate.field_required')),
     confirmPassword: Yup.string().oneOf(
-      [Yup.ref("password"), null],
-      t("errors_feedbacks.validate.passwords_did_match")
+      [Yup.ref('password'), null],
+      t('errors_feedbacks.validate.passwords_did_match'),
     ),
   });
 
   return (
     <Formik
       initialValues={{
-        username: "",
-        password: "",
-        confirmPassword: "",
+        username: '',
+        password: '',
+        confirmPassword: '',
       }}
       validationSchema={SignupSchema}
       onSubmit={async ({ username, password }) => {
@@ -46,20 +46,20 @@ export const SignUp = () => {
             .post(routes.signupPath(), { username, password })
             .then((response) => {
               const { token, username } = response.data;
-              localStorage.setItem("userId", JSON.stringify(response.data));
+              localStorage.setItem('userId', JSON.stringify(response.data));
               if (token) {
                 login(username);
                 navigate(currLocation);
                 setDisabled(disabled);
               }
-              return "";
+              return '';
             });
         } catch (error) {
           error
             ? setServerError(
-                t("errors_feedbacks.validate.userName_alreadyUsed")
-              )
-            : setServerError("");
+              t('errors_feedbacks.validate.userName_alreadyUsed'),
+            )
+            : setServerError('');
           setDisabled(disabled);
         }
       }}
@@ -80,17 +80,17 @@ export const SignUp = () => {
                   <Form className="w-50">
                     <div className="form-group">
                       <h1 className="text-center mb-4">
-                        {t("headers.signup_header")}
+                        {t('headers.signup_header')}
                       </h1>
                       {Object.keys(values).map((fieldName) => (
                         <div className="form-floating mb-3" key={fieldName}>
                           <Field
                             name={fieldName}
                             className={`form-control ${
-                              (touched[fieldName] && errors[fieldName]) ||
-                              serverError
-                                ? "is-invalid"
-                                : ""
+                              (touched[fieldName] && errors[fieldName])
+                              || serverError
+                                ? 'is-invalid'
+                                : ''
                             }`}
                             autoComplete={fieldName}
                             required
@@ -100,13 +100,13 @@ export const SignUp = () => {
                             className="invalid-tooltip"
                             style={{
                               display:
-                                (touched[fieldName] && errors[fieldName]) ||
-                                serverError
-                                  ? "block"
-                                  : "none",
+                                (touched[fieldName] && errors[fieldName])
+                                || serverError
+                                  ? 'block'
+                                  : 'none',
                             }}
                           >
-                            {fieldName === "confirmPassword"
+                            {fieldName === 'confirmPassword'
                               ? errors[fieldName] || serverError
                               : errors[fieldName]}
                           </div>
@@ -122,7 +122,7 @@ export const SignUp = () => {
                         className="w-100 btn btn-outline-primary"
                         disabled={disabled}
                       >
-                        {t("buttons.registration")}
+                        {t('buttons.registration')}
                       </button>
                     </div>
                   </Form>
