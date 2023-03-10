@@ -1,13 +1,13 @@
 import './App.css';
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Login } from './pages/Loginpage';
+import Login from './pages/Loginpage';
 import { Main } from './pages/Mainpage';
-import { Navbar } from './components/Navbar';
-import { Notfound } from './pages/Notfoundpage';
+import Navbar from './components/Navbar';
+import Notfound from './pages/Notfoundpage';
 import RequireAuth from './hooks/RequireAuth';
 import { AuthorizeProvider } from './hooks/AuthorizeProvider';
-import { SignUp } from './pages/Signuppage';
+import SignUp from './pages/Signuppage';
 
 const App = () => (
   <AuthorizeProvider>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-export const Notfound = () => {
+const Notfound = () => {
   const { t } = useTranslation();
   return (
     <div className="text-center">
@@ -19,3 +19,5 @@ export const Notfound = () => {
     </div>
   );
 };
+
+export default Notfound;

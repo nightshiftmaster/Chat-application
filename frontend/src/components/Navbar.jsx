@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../hooks/AuthorizeProvider';
 
-export const Navbar = () => {
+const Navbar = () => {
   const { t } = useTranslation();
   const { user, logout } = useContext(AuthContext);
   const hidden = !user;
@@ -30,3 +30,5 @@ export const Navbar = () => {
     </nav>
   );
 };
+
+export default Navbar

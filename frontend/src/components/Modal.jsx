@@ -18,7 +18,7 @@ import {
 
 const socket = io();
 
-export const Modalwindow = ({ values }) => {
+const Modalwindow = ({ values }) => {
   const {
     modalShown,
     modalAction,
@@ -215,3 +215,5 @@ export const Modalwindow = ({ values }) => {
     </Modal>
   );
 };
+
+export default Modalwindow

@@ -1,16 +1,12 @@
-import App from "./App";
+import { Provider } from 'react-redux';
+import App from './App';
+import store from './slices';
+import './i18n';
 
-import store from "./slices";
-import { Provider } from "react-redux";
-
-import "./i18n";
-
-const init = async () => {
-  return (
+const init = async () => (
     <Provider store={store}>
       <App />
     </Provider>
   );
-};
 
 export default init;

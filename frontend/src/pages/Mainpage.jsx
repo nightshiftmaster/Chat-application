@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+// eslint-disable-file react-hooks/exhaustive-deps
 import axios from 'axios';
 import Dropdown from 'react-bootstrap/Dropdown';
 import {
@@ -11,7 +11,7 @@ import { io } from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
 import { AuthContext } from '../hooks/AuthorizeProvider';
-import { Modalwindow } from '../components/Modal';
+import Modalwindow from '../components/Modal';
 import 'react-toastify/dist/ReactToastify.css';
 import {
   addChannels,
@@ -22,7 +22,7 @@ import {
   addMessage,
   selectors as messagesSelector,
 } from '../slices/messagesSlice';
-import { routes } from '../routes';
+import routes from '../routes';
 
 const socket = io();
 
@@ -38,9 +38,9 @@ export const Main = () => {
   const handleCloseModal = () => setModalShow(false);
   const handleShowModal = () => setModalShow(true);
 
-  const channels = useSelector(channelSelector.selectAll);
-  const messages = useSelector(messagesSelector.selectAll);
-  const messagesPerChannel = messages.filter(
+  const channelsColl = useSelector(channelSelector.selectAll);
+  const messagesColl = useSelector(messagesSelector.selectAll);
+  const messagesPerChannel = messagesColl.filter(
     ({ channelId }) => channelId === activeChannel.id,
   );
   const { token, username } = JSON.parse(localStorage.getItem('userId'));
@@ -49,7 +49,7 @@ export const Main = () => {
 
   useEffect(() => {
     inputRef.current.focus();
-  }, [messages]);
+  }, [messagesColl]);
 
   useEffect(() => {
     login(username);
@@ -65,7 +65,7 @@ export const Main = () => {
       dispatch(addMessages(messages));
     };
     fetchChannels();
-  }, []);
+  }, [token]);
 
   const handleSubmitMessage = (e) => {
     e.preventDefault();
@@ -84,20 +84,17 @@ export const Main = () => {
     setText('');
   };
 
-  const modal = useMemo(
-    () => (
-      <Modalwindow
-        values={{
-          modalShown,
-          modalAction,
-          handleCloseModal,
-          selectedChannel,
-          setActiveChannel,
-        }}
-      />
-    ),
-    [modalShown],
-  );
+  const modal = useMemo(() => (
+    <Modalwindow
+      values={{
+        modalShown,
+        modalAction,
+        handleCloseModal,
+        selectedChannel,
+        setActiveChannel,
+      }}
+    />
+  ), [modalShown]);
 
   return (
     <div className="d-flex flex-column bg-light">
@@ -131,7 +128,7 @@ export const Main = () => {
             </div>
             <ReactScrollableFeed>
               <ul className="nav flex-column nav-pills nav-fill px-2 mb-3  d-block">
-                {channels.map(({ id, name, removable }) => (
+                {channelsColl.map(({ id, name, removable }) => (
                   <li key={id} className="nav-item w-100">
                     <div
                       role="group"
@@ -150,7 +147,9 @@ export const Main = () => {
                       {removable ? (
                         <Dropdown>
                           <Dropdown.Toggle
-                            variant={activeChannel.id === id ? 'secondary' : ''}
+                            variant={
+                                activeChannel.id === id ? 'secondary' : ''
+                              }
                             id="dropdown-basic"
                           >
                             <span className="visually-hidden">
@@ -205,8 +204,8 @@ export const Main = () => {
               </div>
               <ReactScrollableFeed>
                 <div id="messages-box" className="chat-messages px-5">
-                  {messagesPerChannel.map((element, index) => (
-                    <div className="text-break mb-2" key={index}>
+                  {messagesPerChannel.map((element) => (
+                    <div className="text-break mb-2" key={element.id}>
                       <b>{element.username}</b>
                       :
                       {element.body}
@@ -256,6 +255,4 @@ export const Main = () => {
       </div>
     </div>
   );
-};
-
-export default Main;
+}

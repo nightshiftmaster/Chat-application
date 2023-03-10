@@ -6,10 +6,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useTranslation } from 'react-i18next';
-import { routes } from '../routes';
+import routes from '../routes';
 import { AuthContext } from '../hooks/AuthorizeProvider';
 
-export const Login = () => {
+const Login = () => {
   const [error, setError] = useState('');
   const [disabled, setDisabled] = useState(false);
   const { login } = useContext(AuthContext);
@@ -140,3 +140,5 @@ export const Login = () => {
     </div>
   );
 };
+
+export default Login
