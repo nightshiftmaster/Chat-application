@@ -36,12 +36,6 @@ export const Modalwindow = ({ values }) => {
     ({ name }) => name
   );
 
-  useEffect(() => {
-    toast.success(t("errors_feedbacks.toasts.createChannel"), {
-      position: toast.POSITION.TOP_RIGHT,
-    });
-  }, [useSelector(channelSelector.selectAll)]);
-
   const schema = yup
     .string()
     .required(t("errors_feedbacks.validate.field_required"))
@@ -64,8 +58,9 @@ export const Modalwindow = ({ values }) => {
         dispatch(addChannel(payload));
       });
       socket.emit("newChannel", { name: censoredText });
-      handleCloseModal();
-      setText("");
+      toast.success(t("errors_feedbacks.toasts.createChannel"), {
+        position: toast.POSITION.TOP_RIGHT,
+      });
       setError("");
       setDisabled(disabled);
     } catch (e) {
@@ -102,9 +97,9 @@ export const Modalwindow = ({ values }) => {
       dispatch(removeChannel(payload));
     });
     socket.emit("removeChannel", { id: selectedChannel.id });
-    // toast.success(t("errors_feedbacks.toasts.removeChannel"), {
-    //   position: toast.POSITION.TOP_RIGHT,
-    // });
+    toast.success(t("errors_feedbacks.toasts.removeChannel"), {
+      position: toast.POSITION.TOP_RIGHT,
+    });
 
     setActiveChannel({ id: 1, name: "general" });
     handleCloseModal();
