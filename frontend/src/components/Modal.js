@@ -118,10 +118,12 @@ export const Modalwindow = ({ values }) => {
       title: t("headers.modal.adding_header"),
       body: (
         <>
-          <Form.Label className="visually-hidden">Имя канала</Form.Label>
+          <Form.Label className="visually-hidden" htmlFor="nameInput">
+            Имя канала
+          </Form.Label>
           <Form.Control
             className={error ? "is-invalid" : ""}
-            name="name"
+            id="nameInput"
             ref={formElement}
             value={text}
             onChange={(e) => setText(e.target.value)}
