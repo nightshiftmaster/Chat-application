@@ -157,8 +157,12 @@ export const Modalwindow = ({ values }) => {
       title: t("headers.modal.renaming_header"),
       body: (
         <>
+          <Form.Label className="visually-hidden" htmlFor="renameInput">
+            Переименовать
+          </Form.Label>
           <Form.Control
             className={error ? "is-invalid" : ""}
+            id="renameInput"
             ref={formElement}
             defaultValue={selectedChannel.name}
             onChange={(e) => setText(e.target.value)}
