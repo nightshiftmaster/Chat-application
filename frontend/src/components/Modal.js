@@ -61,6 +61,8 @@ export const Modalwindow = ({ values }) => {
       toast.success(t("errors_feedbacks.toasts.createChannel"), {
         position: toast.POSITION.TOP_RIGHT,
       });
+      handleCloseModal();
+      setText("");
       setError("");
       setDisabled(disabled);
     } catch (e) {
@@ -116,6 +118,7 @@ export const Modalwindow = ({ values }) => {
       title: t("headers.modal.adding_header"),
       body: (
         <>
+          <Form.Label className="visually-hidden">Имя канала</Form.Label>
           <Form.Control
             className={error ? "is-invalid" : ""}
             name="name"
@@ -126,9 +129,6 @@ export const Modalwindow = ({ values }) => {
               e.key === "Enter" ? handleAdd() : setText(e.target.value)
             }
           />
-          <label className="visually-hidden" htmlFor="name">
-            Имя канала
-          </label>
           <div className="invalid-feedback">{error}</div>
         </>
       ),
