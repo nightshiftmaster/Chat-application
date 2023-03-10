@@ -175,7 +175,10 @@ export const Main = () => {
                                       handleShowModal();
                                     }}
                                   >
-                                    {t(`headers.dropDown_links.${item}`)}
+                                    <span>
+                                      {" "}
+                                      {t(`headers.dropDown_links.${item}`)}
+                                    </span>
                                   </Dropdown.Item>
                                 );
                               })}

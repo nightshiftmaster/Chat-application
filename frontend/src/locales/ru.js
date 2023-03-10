@@ -15,7 +15,7 @@ export default {
       },
       dropDown_links: {
         removing: "Удалить",
-        renaming: "Переимeновать",
+        renaming: "Переименовать",
       },
     },
 
