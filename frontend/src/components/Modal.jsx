@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import filter from 'leo-profanity';
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
@@ -8,7 +9,6 @@ import { toast } from 'react-toastify';
 import { io } from 'socket.io-client';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
-import filter from 'leo-profanity';
 import {
   addChannel,
   renameChannel,

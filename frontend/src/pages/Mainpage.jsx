@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import axios from 'axios';
 import Dropdown from 'react-bootstrap/Dropdown';
 import {
@@ -83,17 +84,20 @@ export const Main = () => {
     setText('');
   };
 
-  const modal = useMemo(() => (
-    <Modalwindow
-      values={{
-        modalShown,
-        modalAction,
-        handleCloseModal,
-        selectedChannel,
-        setActiveChannel,
-      }}
-    />
-  ), [modalShown]);
+  const modal = useMemo(
+    () => (
+      <Modalwindow
+        values={{
+          modalShown,
+          modalAction,
+          handleCloseModal,
+          selectedChannel,
+          setActiveChannel,
+        }}
+      />
+    ),
+    [modalShown],
+  );
 
   return (
     <div className="d-flex flex-column bg-light">
@@ -146,9 +150,7 @@ export const Main = () => {
                       {removable ? (
                         <Dropdown>
                           <Dropdown.Toggle
-                            variant={
-                                activeChannel.id === id ? 'secondary' : ''
-                              }
+                            variant={activeChannel.id === id ? 'secondary' : ''}
                             id="dropdown-basic"
                           >
                             <span className="visually-hidden">
@@ -255,3 +257,5 @@ export const Main = () => {
     </div>
   );
 };
+
+export default Main;
