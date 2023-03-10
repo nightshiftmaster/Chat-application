@@ -18,7 +18,7 @@ const SignUp = () => {
   const { t } = useTranslation();
 
   const SignupSchema = Yup.object().shape({
-    userName: Yup.string()
+    username: Yup.string()
       .min(3, t('errors_feedbacks.validate.name_length'))
       .max(20, t('errors_feedbacks.validate.name_length'))
       .required(t('errors_feedbacks.validate.field_required')),
@@ -34,16 +34,16 @@ const SignUp = () => {
   return (
     <Formik
       initialValues={{
-        userName: '',
+        username: '',
         password: '',
         confirmPassword: '',
       }}
       validationSchema={SignupSchema}
-      onSubmit={async ({ userName, password }) => {
+      onSubmit={async ({ username, password }) => {
         setDisabled(!disabled);
         try {
           await axios
-            .post(routes.signupPath(), { userName, password })
+            .post(routes.signupPath(), { username, password })
             .then((response) => {
               const { token, username } = response.data;
               localStorage.setItem('userId', JSON.stringify(response.data));
