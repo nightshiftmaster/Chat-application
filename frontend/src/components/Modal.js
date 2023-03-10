@@ -125,7 +125,7 @@ export const Modalwindow = ({ values }) => {
             ref={formElement}
             value={text}
             onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) =>
+            onKeyPress={(e) =>
               e.key === "Enter" ? handleAdd() : setText(e.target.value)
             }
           />
