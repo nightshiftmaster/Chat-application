@@ -83,6 +83,9 @@ export const Modalwindow = ({ values }) => {
         id: selectedChannel.id,
         name: censoredText,
       });
+      toast.success(t("errors_feedbacks.toasts.renameChannel"), {
+        position: toast.POSITION.TOP_RIGHT,
+      });
       handleCloseModal();
       setText("");
       setError("");

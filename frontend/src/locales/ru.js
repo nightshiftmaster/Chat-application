@@ -56,6 +56,7 @@ export default {
       toasts: {
         network_error: "Ошибка соединения!",
         createChannel: "Канал создан",
+        renameChannel: "Канал переименован",
         removeChannel: "Канал удалён",
       },
     },
