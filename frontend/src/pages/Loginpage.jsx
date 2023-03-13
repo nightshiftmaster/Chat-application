@@ -1,13 +1,15 @@
+/* eslint-disable functional/no-conditional-statements */
+/* eslint-disable functional/no-expression-statements */
 import { React, useContext, useState } from 'react';
 import { useFormik } from 'formik';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 import { useTranslation } from 'react-i18next';
 import routes from '../routes';
 import { AuthContext } from '../hooks/AuthorizeProvider';
+import image from '../assets/image-login.jpeg';
 
 const Login = () => {
   const [error, setError] = useState('');
@@ -66,7 +68,7 @@ const Login = () => {
             <div className="card-body row p-5">
               <div className="col-12 col-md-6 d-flex align-items-center justify-content-center">
                 <img
-                  src="images/image-login.jpeg"
+                  src={image}
                   className="rounded-circle"
                   alt=""
                 />

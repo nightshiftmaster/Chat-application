@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import routes from '../routes';
 import { AuthContext } from '../hooks/AuthorizeProvider';
+import image from '../assets/image-registration.jpg';
 
 const SignUp = () => {
   const { login } = useContext(AuthContext);
@@ -71,7 +72,7 @@ const SignUp = () => {
                 <div className="card-body d-flex flex-column flex-md-row justify-content-around align-items-center p-5">
                   <div>
                     <img
-                      src="images/image-registration.jpg"
+                      src={image}
                       className="rounded-circle"
                       alt="Регистрация"
                     />

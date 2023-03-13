@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import image from '../assets/image-notfound.svg';
 
 const Notfound = () => {
   const { t } = useTranslation();
@@ -9,7 +10,7 @@ const Notfound = () => {
       <img
         alt="Страница не найдена"
         className="col-md-3 rounded"
-        src="/images/image-notfound.svg"
+        src={image}
       />
       <h1 className="h4 text-muted">{t('headers.notfound_header')}</h1>
       <p className="text-muted">
