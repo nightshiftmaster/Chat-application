@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
 import { AuthContext } from '../hooks/AuthorizeProvider';
 import Modalwindow from '../components/Modal';
-import 'react-toastify/dist/ReactToastify.css';
 import {
   addChannels,
   selectors as channelSelector,

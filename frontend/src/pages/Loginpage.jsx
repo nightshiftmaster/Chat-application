@@ -3,7 +3,6 @@ import { useFormik } from 'formik';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from 'react-i18next';
 import routes from '../routes';
 import { AuthContext } from '../hooks/AuthorizeProvider';

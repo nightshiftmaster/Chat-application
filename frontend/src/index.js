@@ -1,6 +1,5 @@
 import ReactDOM from 'react-dom/client';
 import { Provider, ErrorBoundary } from '@rollbar/react';
-import './index.css';
 import init from './init';
 
 const rollbarConfig = {
