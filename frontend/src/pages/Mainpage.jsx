@@ -1,5 +1,3 @@
-/* eslint-disable functional/no-expression-statements */
-// eslint-disable-file react-hooks/exhaustive-deps
 import axios from 'axios';
 import {
   React, useEffect, useState, useRef, useMemo, useContext,

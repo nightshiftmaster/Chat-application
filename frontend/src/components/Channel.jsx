@@ -1,4 +1,3 @@
-/* eslint-disable functional/no-expression-statements */
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useTranslation } from 'react-i18next';
 
