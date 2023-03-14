@@ -5,7 +5,16 @@
 
 ## About:
 
-Hexlet Chat application is a modern and user-friendly platform that connects people from all over the world. With its intuitive interface and robust features, it provides an effortless way for users to communicate and share information. Whether you're looking to stay in touch with friends and family, or collaborate with coworkers on a project, our Hexlet Chat application is the perfect solution for all your communication needs.
+A Hexlet Chat app is a platform for users to communicate with each other in real-time. The app typically requires users to create an account or sign in to start chatting.
+
+The app could include features such as:
+
+1. One-on-one messaging: Users could send direct messages to each other to have private conversations.
+
+2. Group messaging: Users could create chat groups for specific topics or interests, allowing them to chat with multiple people at once.
+
+3. Emojis: Users could use emojis to express emotions and add a fun element to their conversations
+
 
 [Click here to see an example !](https://frontend-project-12-production-5178.up.railway.app)
 
@@ -20,3 +29,6 @@ $ make install
 ```sh
 $ make start
 ```
+
+## Preview
+![image](Demo.gif)
