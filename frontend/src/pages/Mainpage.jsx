@@ -1,6 +1,6 @@
+/* eslint-disable functional/no-expression-statements */
 // eslint-disable-file react-hooks/exhaustive-deps
 import axios from 'axios';
-import Dropdown from 'react-bootstrap/Dropdown';
 import {
   React, useEffect, useState, useRef, useMemo, useContext,
 } from 'react';
@@ -12,6 +12,8 @@ import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
 import { AuthContext } from '../hooks/AuthorizeProvider';
 import Modalwindow from '../components/Modal';
+import Channel from '../components/Channel';
+import Message from '../components/Message';
 import {
   addChannels,
   selectors as channelSelector,
@@ -129,60 +131,18 @@ const Main = () => {
             </div>
             <ReactScrollableFeed>
               <ul className="nav flex-column nav-pills nav-fill px-2 mb-3  d-block">
-                {channelsColl.map(({ id, name, removable }) => (
-                  <li key={id} className="nav-item w-100">
-                    <div
-                      role="group"
-                      className="d-flex show dropdown btn-group"
-                    >
-                      <button
-                        onClick={() => setActiveChannel({ id, name, removable })}
-                        type="button"
-                        className={`w-100 rounded-0 text-start text-truncate btn ${
-                          activeChannel.id === id ? 'btn-secondary' : ''
-                        }`}
-                      >
-                        <span className="me-1">#</span>
-                        {name}
-                      </button>
-                      {removable ? (
-                        <Dropdown>
-                          <Dropdown.Toggle
-                            variant={
-                                activeChannel.id === id ? 'secondary' : ''
-                              }
-                            id="dropdown-basic"
-                          >
-                            <span className="visually-hidden">
-                              Управление каналом
-                            </span>
-                          </Dropdown.Toggle>
-
-                          <Dropdown.Menu>
-                            {['removing', 'renaming'].map((item) => (
-                              <Dropdown.Item
-                                key={item}
-                                onClick={() => {
-                                  setModalAction(item);
-                                  setSelectedChannel({
-                                    id,
-                                    name,
-                                    removable,
-                                  });
-                                  handleShowModal();
-                                }}
-                              >
-                                <span>
-                                  {' '}
-                                  {t(`headers.dropDown_links.${item}`)}
-                                </span>
-                              </Dropdown.Item>
-                            ))}
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      ) : null}
-                    </div>
-                  </li>
+                {channelsColl.map((item) => (
+                  <Channel
+                    key={item.id}
+                    item={item}
+                    props={{
+                      setModalAction,
+                      setSelectedChannel,
+                      handleShowModal,
+                      activeChannel,
+                      setActiveChannel,
+                    }}
+                  />
                 ))}
               </ul>
             </ReactScrollableFeed>
@@ -206,11 +166,7 @@ const Main = () => {
               <ReactScrollableFeed>
                 <div id="messages-box" className="chat-messages px-5">
                   {messagesPerChannel.map((element) => (
-                    <div className="text-break mb-2" key={element.id}>
-                      <b>{element.username}</b>
-                      :
-                      {element.body}
-                    </div>
+                    <Message key={element.id} element={element} />
                   ))}
                 </div>
               </ReactScrollableFeed>
