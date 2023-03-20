@@ -1,6 +1,3 @@
-/* eslint-disable import/no-cycle */
-/* eslint-disable functional/no-expression-statements */
-/* eslint-disable react-hooks/exhaustive-deps */
 import filter from 'leo-profanity';
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

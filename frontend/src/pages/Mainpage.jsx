@@ -1,5 +1,3 @@
-/* eslint-disable import/no-cycle */
-/* eslint-disable functional/no-expression-statements */
 import axios from 'axios';
 import {
   React, useEffect, useState, useRef, useContext,

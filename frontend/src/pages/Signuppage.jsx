@@ -1,6 +1,3 @@
-/* eslint-disable functional/no-expression-statements */
-/* eslint-disable functional/no-conditional-statements */
-/* eslint-disable no-unused-vars */
 import { React, useContext, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
