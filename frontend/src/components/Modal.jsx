@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import filter from 'leo-profanity';
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

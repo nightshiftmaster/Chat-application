@@ -1,8 +1,9 @@
+/* eslint-disable import/no-cycle */
 import './App.css';
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './pages/Loginpage';
 import Main from './pages/Mainpage';
+import Login from './pages/Loginpage';
 import Navbar from './components/Navbar';
 import Notfound from './pages/Notfoundpage';
 import RequireAuth from './hooks/RequireAuth';
