@@ -32,12 +32,6 @@ const AuthorizeProvider = ({ children }) => {
     headers: { Authorization: `Bearer ${userId.token}` },
   });
 
-  // const value = useMemo(
-  //   () => ({
-  //     login, logout, user, setUser,
-  //   }),
-  //   [],
-  // );
   return (
     <AuthContext.Provider value={{
       login, logout, user, userId, getAuthHeaders, setUser,
