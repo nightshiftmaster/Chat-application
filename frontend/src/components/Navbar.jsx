@@ -5,7 +5,8 @@ import { AuthContext } from '../hooks/AuthorizeProvider';
 
 const Navbar = () => {
   const { t } = useTranslation();
-  const { user, logout } = useContext(AuthContext);
+  const value = useContext(AuthContext);
+  const { user, logout } = value;
   const hidden = !user;
   return (
     <nav className="shadow-sm navbar bg-white">
@@ -17,10 +18,7 @@ const Navbar = () => {
           <button
             hidden={hidden}
             type="button"
-            onClick={() => {
-              logout();
-              localStorage.removeItem('userId');
-            }}
+            onClick={() => logout()}
             className="btn btn-primary"
           >
             {t('buttons.logout')}

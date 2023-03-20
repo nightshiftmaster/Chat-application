@@ -1,12 +1,15 @@
+/* eslint-disable functional/no-expression-statements */
 import Dropdown from 'react-bootstrap/Dropdown';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { setActiveChannel, selectChannel } from '../slices/activeChannelSlice';
+import { openModal } from '../slices/modalSlice';
 
-const Channel = ({ item, props }) => {
+const Channel = ({ item }) => {
   const { t } = useTranslation();
-  const {
-    setModalAction, setSelectedChannel, handleShowModal, activeChannel, setActiveChannel,
-  } = props;
+  const dispatch = useDispatch();
   const { id, name, removable } = item;
+  const { activeChannel } = useSelector((state) => state.activeChannel);
 
   return (
     <li key={id} className="nav-item w-100">
@@ -15,7 +18,7 @@ const Channel = ({ item, props }) => {
         className="d-flex show dropdown btn-group"
       >
         <button
-          onClick={() => setActiveChannel({ id, name, removable })}
+          onClick={() => dispatch(setActiveChannel({ id, name, removable }))}
           type="button"
           className={`w-100 rounded-0 text-start text-truncate btn ${
             activeChannel.id === id ? 'btn-secondary' : ''
@@ -42,13 +45,12 @@ const Channel = ({ item, props }) => {
                 <Dropdown.Item
                   key={action}
                   onClick={() => {
-                    setModalAction(action);
-                    setSelectedChannel({
+                    dispatch(selectChannel({
                       id,
                       name,
                       removable,
-                    });
-                    handleShowModal();
+                    }));
+                    dispatch(openModal(action));
                   }}
                 >
                   <span>

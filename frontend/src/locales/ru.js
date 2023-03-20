@@ -35,7 +35,7 @@ export default {
         password: 'Пароль',
       },
       signup: {
-        userName: 'Имя пользователя',
+        username: 'Имя пользователя',
         password: 'Пароль',
         confirmPassword: 'Подтвердите пароль',
       },

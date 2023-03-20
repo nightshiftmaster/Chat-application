@@ -10,8 +10,9 @@ import { AuthorizeProvider } from './hooks/AuthorizeProvider';
 import SignUp from './pages/Signuppage';
 
 const App = () => (
-  <AuthorizeProvider>
-    <BrowserRouter>
+
+  <BrowserRouter>
+    <AuthorizeProvider>
       <div className="d-flex flex-column h-100">
         <Navbar />
         <Routes>
@@ -28,8 +29,9 @@ const App = () => (
           <Route path="*" element={<Notfound />} />
         </Routes>
       </div>
-    </BrowserRouter>
-  </AuthorizeProvider>
+    </AuthorizeProvider>
+  </BrowserRouter>
+
 );
 
 export default App;

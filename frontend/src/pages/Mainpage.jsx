@@ -1,13 +1,15 @@
+/* eslint-disable import/no-cycle */
+/* eslint-disable functional/no-expression-statements */
 import axios from 'axios';
 import {
-  React, useEffect, useState, useRef, useMemo, useContext,
+  React, useEffect, useState, useRef, useContext,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactScrollableFeed from 'react-scrollable-feed';
 import { ToastContainer } from 'react-toastify';
-import { io } from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
+import { socket } from '../init';
 import { AuthContext } from '../hooks/AuthorizeProvider';
 import Modalwindow from '../components/Modal';
 import Channel from '../components/Channel';
@@ -21,85 +23,64 @@ import {
   addMessage,
   selectors as messagesSelector,
 } from '../slices/messagesSlice';
+import { openModal } from '../slices/modalSlice';
+import { setActiveChannel } from '../slices/activeChannelSlice';
 import routes from '../routes';
-
-const socket = io();
 
 const Main = () => {
   const [text, setText] = useState('');
-  const [modalAction, setModalAction] = useState('adding');
-  const [activeChannel, setActiveChannel] = useState({});
-  const [modalShown, setModalShow] = useState(false);
-  const [selectedChannel, setSelectedChannel] = useState({});
   const inputRef = useRef(null);
-  const { login } = useContext(AuthContext);
-
-  const handleCloseModal = () => setModalShow(false);
-  const handleShowModal = () => setModalShow(true);
+  const { login, userId, getAuthHeaders } = useContext(AuthContext);
 
   const channelsColl = useSelector(channelSelector.selectAll);
   const messagesColl = useSelector(messagesSelector.selectAll);
+  const activeChannel = useSelector((state) => state.activeChannel);
   const messagesPerChannel = messagesColl.filter(
     ({ channelId }) => channelId === activeChannel.id,
   );
-  const { token, username } = JSON.parse(localStorage.getItem('userId'));
+
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
   useEffect(() => {
     inputRef.current.focus();
-  }, [messagesColl]);
+  }, []);
 
   useEffect(() => {
-    login(username);
+    login(userId);
     const fetchChannels = async () => {
       const response = await axios
-        .get(routes.usersPath(), {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        .get(routes.usersPath(), getAuthHeaders())
         .catch((e) => console.log(e.message));
       const { channels, messages, currentChannelId } = response.data;
-      setActiveChannel({ id: currentChannelId, name: 'general' });
+      dispatch(setActiveChannel({ id: currentChannelId, name: 'general' }));
       dispatch(addChannels(channels));
       dispatch(addMessages(messages));
     };
     fetchChannels();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, []);
 
   const handleSubmitMessage = (e) => {
     e.preventDefault();
     filter.loadDictionary('ru');
     const censoredText = filter.clean(text);
 
+    socket.emit('newMessage', {
+      body: censoredText,
+      channelId: activeChannel.id,
+      username: userId.username,
+    });
     socket.on('newMessage', (message) => {
       dispatch(addMessage(message));
     });
 
-    socket.emit('newMessage', {
-      body: censoredText,
-      channelId: activeChannel.id,
-      username,
-    });
     setText('');
   };
 
-  const modal = useMemo(() => (
-    <Modalwindow
-      values={{
-        modalShown,
-        modalAction,
-        handleCloseModal,
-        selectedChannel,
-        setActiveChannel,
-      }}
-    />
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  ), [modalShown]);
-
   return (
     <div className="d-flex flex-column bg-light">
-      {modal}
+      <Modalwindow />
       <ToastContainer />
       <div className="container my-4 rounded shadow">
         <div className="row bg-white flex-md-row" style={{ height: '85vh' }}>
@@ -109,8 +90,7 @@ const Main = () => {
               <button
                 type="button"
                 onClick={() => {
-                  setModalAction('adding');
-                  handleShowModal();
+                  dispatch(openModal('adding'));
                 }}
                 className="p-0 text-primary btn btn-group-vertical"
               >
@@ -133,13 +113,6 @@ const Main = () => {
                   <Channel
                     key={item.id}
                     item={item}
-                    props={{
-                      setModalAction,
-                      setSelectedChannel,
-                      handleShowModal,
-                      activeChannel,
-                      setActiveChannel,
-                    }}
                   />
                 ))}
               </ul>

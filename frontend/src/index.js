@@ -1,9 +1,10 @@
+/* eslint-disable functional/no-expression-statements */
 import ReactDOM from 'react-dom/client';
 import { Provider, ErrorBoundary } from '@rollbar/react';
-import init from './init';
+import { init } from './init';
 
 const rollbarConfig = {
-  accessToken: 'f7631b7d3d50493083cb2438ac4c5681',
+  accessToken: process.env.REACT_APP_SECRET_TOKEN,
   environment: 'production',
 };
 

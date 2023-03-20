@@ -1,3 +1,5 @@
+/* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-conditional-statements */
 /* eslint-disable no-unused-vars */
 import { React, useContext, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
@@ -12,14 +14,13 @@ import image from '../assets/image-registration.jpg';
 const SignUp = () => {
   const { login } = useContext(AuthContext);
   const [serverError, setServerError] = useState('');
-  const [disabled, setDisabled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const currLocation = location.state ? location.state.from.pathname : '/';
   const { t } = useTranslation();
 
   const SignupSchema = Yup.object().shape({
-    userName: Yup.string()
+    username: Yup.string()
       .min(3, t('errors_feedbacks.validate.name_length'))
       .max(20, t('errors_feedbacks.validate.name_length'))
       .required(t('errors_feedbacks.validate.field_required')),
@@ -35,36 +36,24 @@ const SignUp = () => {
   return (
     <Formik
       initialValues={{
-        userName: '',
+        username: '',
         password: '',
         confirmPassword: '',
       }}
       validationSchema={SignupSchema}
-      onSubmit={async ({ userName, password }) => {
-        setDisabled(!disabled);
-        try {
-          await axios
-            .post(routes.signupPath(), { userName, password })
-            .then((response) => {
-              const { token, username } = response.data;
-              localStorage.setItem('userId', JSON.stringify(response.data));
-              if (token) {
-                login(username);
-                navigate(currLocation);
-                setDisabled(disabled);
-              }
-              return '';
-            });
-        } catch (error) {
-          // eslint-disable-next-line no-unused-expressions
-          setServerError(
-            t('errors_feedbacks.validate.userName_alreadyUsed'),
-          );
-          setDisabled(disabled);
-        }
-      }}
+      onSubmit={({ username, password }) => axios
+        .post(routes.signupPath(), { username, password })
+        .then((response) => {
+          login(response.data);
+          navigate(currLocation);
+        })
+        .catch(() => setServerError(
+          t('errors_feedbacks.validate.userName_alreadyUsed'),
+        ))}
     >
-      {({ errors, touched, values }) => (
+      {({
+        errors, touched, values, isSubmitting,
+      }) => (
         <div className="container-fluid bg-light">
           <div className="row justify-content-center align-content-center min-vh-100">
             <div className="col-12 col-md-8 col-xxl-6">
@@ -74,7 +63,7 @@ const SignUp = () => {
                     <img
                       src={image}
                       className="rounded-circle"
-                      alt="Регистрация"
+                      alt={t('headers.signup_header')}
                     />
                   </div>
                   <Form className="w-50">
@@ -120,7 +109,7 @@ const SignUp = () => {
                       <button
                         type="submit"
                         className="w-100 btn btn-outline-primary"
-                        disabled={disabled}
+                        disabled={isSubmitting}
                       >
                         {t('buttons.registration')}
                       </button>

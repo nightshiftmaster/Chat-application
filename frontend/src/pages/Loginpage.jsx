@@ -1,6 +1,7 @@
+/* eslint-disable functional/no-expression-statements */
 import { React, useContext, useState } from 'react';
 import { useFormik } from 'formik';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -10,31 +11,18 @@ import image from '../assets/image-login.jpeg';
 
 const Login = () => {
   const [error, setError] = useState('');
-  const [disabled, setDisabled] = useState(false);
   const { login } = useContext(AuthContext);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const currLocation = location.state ? location.state.from.pathname : '/';
   const { t } = useTranslation();
 
   const errors = {
-    ERR_NETWORK: () => {
+    netWorkError: () => {
       toast.error(t('errors_feedbacks.toasts.network_error'), {
         position: toast.POSITION.TOP_RIGHT,
       });
     },
-    ERR_BAD_REQUEST: () => {
+    401: () => {
       setError(t('errors_feedbacks.login.invalid_user'));
     },
-  };
-
-  const getAuth = () => {
-    const userId = JSON.parse(localStorage.getItem('userId'));
-    if (userId.username && userId.token) {
-      login(userId.username);
-      navigate(currLocation);
-    }
-    return '';
   };
 
   const formik = useFormik({
@@ -42,18 +30,9 @@ const Login = () => {
       username: '',
       password: '',
     },
-    onSubmit: async (formData) => {
-      setDisabled(!disabled);
-      try {
-        const response = await axios.post(routes.loginPath(), formData);
-        localStorage.setItem('userId', JSON.stringify(response.data));
-        getAuth();
-        setDisabled(disabled);
-      } catch (e) {
-        errors[e.code]();
-        setDisabled(disabled);
-      }
-    },
+    onSubmit: (formData) => axios.post(routes.loginPath(), formData)
+      .then((response) => login(response.data))
+      .catch((e) => (e.response ? errors[e.response.status]() : errors.netWorkError())),
   });
 
   return (
@@ -84,7 +63,7 @@ const Login = () => {
                     required
                     onChange={formik.handleChange}
                     value={formik.values.username}
-                    placeholder="Ваш ник"
+                    placeholder={t('placeholders.login.name')}
                     id="username"
                     className={`form-control ${error ? 'is-invalid' : ''}`}
                   />
@@ -99,7 +78,7 @@ const Login = () => {
                     onChange={formik.handleChange}
                     value={formik.values.password}
                     required
-                    placeholder="Пароль"
+                    placeholder={t('placeholders.login.password')}
                     type="password"
                     id="password"
                     className={`form-control ${error ? 'is-invalid' : ''}`}
@@ -119,7 +98,7 @@ const Login = () => {
                 <button
                   type="submit"
                   className="w-100 mb-3 btn btn-outline-primary"
-                  disabled={disabled}
+                  disabled={formik.isSubmitting}
                 >
                   {t('buttons.login')}
                 </button>

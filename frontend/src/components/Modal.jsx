@@ -1,3 +1,5 @@
+/* eslint-disable import/no-cycle */
+/* eslint-disable functional/no-expression-statements */
 /* eslint-disable react-hooks/exhaustive-deps */
 import filter from 'leo-profanity';
 import React, { useState, useRef, useEffect } from 'react';
@@ -6,9 +8,11 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { toast } from 'react-toastify';
-import { io } from 'socket.io-client';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
+import { setActiveChannel } from '../slices/activeChannelSlice';
+import { closeModal } from '../slices/modalSlice';
+import { socket } from '../init';
 import {
   addChannel,
   renameChannel,
@@ -16,16 +20,7 @@ import {
   selectors as channelSelector,
 } from '../slices/channelsSlice';
 
-const socket = io();
-
-const Modalwindow = ({ values }) => {
-  const {
-    modalShown,
-    modalAction,
-    handleCloseModal,
-    selectedChannel,
-    setActiveChannel,
-  } = values;
+const Modalwindow = () => {
   const [text, setText] = useState('');
   const [error, setError] = useState('');
   const [disabled, setDisabled] = useState(false);
@@ -35,6 +30,9 @@ const Modalwindow = ({ values }) => {
   const alreadyExists = useSelector(channelSelector.selectAll).map(
     ({ name }) => name,
   );
+  const { isOpen, action } = useSelector((state) => state.modal);
+
+  const { selectedChannel } = useSelector((state) => state.activeChannel);
 
   const schema = yup
     .string()
@@ -53,15 +51,15 @@ const Modalwindow = ({ values }) => {
     setDisabled(!disabled);
     try {
       await schema.validate(censoredText);
+      socket.emit('newChannel', { name: censoredText });
       socket.on('newChannel', (payload) => {
-        setActiveChannel(payload);
+        dispatch(setActiveChannel(payload));
         dispatch(addChannel(payload));
       });
-      socket.emit('newChannel', { name: censoredText });
       toast.success(t('errors_feedbacks.toasts.createChannel'), {
         position: toast.POSITION.TOP_RIGHT,
       });
-      handleCloseModal();
+      dispatch(closeModal());
       setText('');
       setError('');
       setDisabled(disabled);
@@ -75,18 +73,18 @@ const Modalwindow = ({ values }) => {
     setDisabled(!disabled);
     try {
       await schema.validate(censoredText);
-      socket.on('renameChannel', (payload) => {
-        const { id, name } = payload;
-        dispatch(renameChannel({ id, changes: { name } }));
-      });
       socket.emit('renameChannel', {
         id: selectedChannel.id,
         name: censoredText,
       });
+      socket.on('renameChannel', (payload) => {
+        const { id, name } = payload;
+        dispatch(renameChannel({ id, changes: { name } }));
+      });
       toast.success(t('errors_feedbacks.toasts.renameChannel'), {
         position: toast.POSITION.TOP_RIGHT,
       });
-      handleCloseModal();
+      dispatch(closeModal());
       setText('');
       setError('');
       setDisabled(disabled);
@@ -98,23 +96,22 @@ const Modalwindow = ({ values }) => {
 
   const handleRemove = () => {
     setDisabled(!disabled);
-    socket.on('removeChannel', (payload) => {
-      dispatch(removeChannel(payload));
-    });
     socket.emit('removeChannel', { id: selectedChannel.id });
     toast.success(t('errors_feedbacks.toasts.removeChannel'), {
       position: toast.POSITION.TOP_RIGHT,
     });
-
-    setActiveChannel({ id: 1, name: 'general' });
-    handleCloseModal();
+    socket.on('removeChannel', (payload) => {
+      dispatch(removeChannel(payload));
+    });
+    dispatch(setActiveChannel({ id: 1, name: 'general' }));
+    dispatch(closeModal());
     setText('');
     setDisabled(disabled);
   };
 
   useEffect(() => {
     formElement.current?.focus();
-  }, [modalShown]);
+  }, [isOpen]);
 
   const modalByAction = {
     adding: {
@@ -165,7 +162,7 @@ const Modalwindow = ({ values }) => {
             className={error ? 'is-invalid' : ''}
             id="renameInput"
             ref={formElement}
-            defaultValue={selectedChannel.name}
+            defaultValue={selectedChannel?.name}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => (e.key === 'Enter' ? handleRename() : setText(e.target.value))}
           />
@@ -180,15 +177,15 @@ const Modalwindow = ({ values }) => {
     },
   };
 
-  const { title } = modalByAction[modalAction];
-  const { body } = modalByAction[modalAction];
-  const { button } = modalByAction[modalAction];
+  const { title } = modalByAction[action];
+  const { body } = modalByAction[action];
+  const { button } = modalByAction[action];
 
   return (
     <Modal
-      show={modalShown}
+      show={isOpen}
       onHide={() => {
-        handleCloseModal();
+        dispatch(closeModal());
         setText('');
         setError('');
       }}
@@ -204,7 +201,7 @@ const Modalwindow = ({ values }) => {
           variant="secondary"
           onClick={() => {
             setError('');
-            handleCloseModal();
+            dispatch(closeModal());
             setText('');
           }}
         >

@@ -1,7 +1,11 @@
+/* eslint-disable import/no-cycle */
 import { Provider } from 'react-redux';
+import { io } from 'socket.io-client';
 import App from './App';
 import store from './slices';
 import './i18n';
+
+const socket = io();
 
 const init = async () => (
   <Provider store={store}>
@@ -9,4 +13,4 @@ const init = async () => (
   </Provider>
 );
 
-export default init;
+export { init, socket };
