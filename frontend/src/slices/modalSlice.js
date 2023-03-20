@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable functional/no-expression-statements */
 import { createSlice } from '@reduxjs/toolkit';
 
 const modalSlice = createSlice({
