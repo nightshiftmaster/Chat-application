@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../hooks/AuthorizeProvider';
 
-const Navbar = () => {
+function Navbar() {
   const { t } = useTranslation();
   const value = useContext(AuthContext);
   const { user, logout } = value;
@@ -27,6 +27,6 @@ const Navbar = () => {
       </div>
     </nav>
   );
-};
+}
 
 export default Navbar;

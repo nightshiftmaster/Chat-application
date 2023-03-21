@@ -26,7 +26,7 @@ import { openModal } from '../slices/modalSlice';
 import { setActiveChannel } from '../slices/activeChannelSlice';
 import routes from '../routes';
 
-const Main = () => {
+function Main() {
   const [text, setText] = useState('');
   const inputRef = useRef(null);
   const { login, userId, getAuthHeaders } = useContext(AuthContext);
@@ -50,14 +50,13 @@ const Main = () => {
     const fetchChannels = async () => {
       const response = await axios
         .get(routes.usersPath(), getAuthHeaders())
-        .catch((e) => console.log(e.message));
+        .catch((e) => e.message);
       const { channels, messages, currentChannelId } = response.data;
       dispatch(setActiveChannel({ id: currentChannelId, name: 'general' }));
       dispatch(addChannels(channels));
       dispatch(addMessages(messages));
     };
     fetchChannels();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmitMessage = (e) => {
@@ -182,6 +181,6 @@ const Main = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Main;

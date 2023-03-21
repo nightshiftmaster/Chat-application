@@ -8,7 +8,7 @@ import routes from '../routes';
 import { AuthContext } from '../hooks/AuthorizeProvider';
 import image from '../assets/image-registration.jpg';
 
-const SignUp = () => {
+function SignUp() {
   const { login } = useContext(AuthContext);
   const [serverError, setServerError] = useState('');
   const location = useLocation();
@@ -120,6 +120,6 @@ const SignUp = () => {
       )}
     </Formik>
   );
-};
+}
 
 export default SignUp;

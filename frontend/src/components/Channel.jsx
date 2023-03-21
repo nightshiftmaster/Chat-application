@@ -1,10 +1,12 @@
+/* eslint-disable react/prop-types */
+import React from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { setActiveChannel, selectChannel } from '../slices/activeChannelSlice';
 import { openModal } from '../slices/modalSlice';
 
-const Channel = ({ item }) => {
+function Channel({ item }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { id, name, removable } = item;
@@ -64,5 +66,5 @@ const Channel = ({ item }) => {
       </div>
     </li>
   );
-};
+}
 export default Channel;

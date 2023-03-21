@@ -8,7 +8,7 @@ import routes from '../routes';
 import { AuthContext } from '../hooks/AuthorizeProvider';
 import image from '../assets/image-login.jpeg';
 
-const Login = () => {
+function Login() {
   const [error, setError] = useState('');
   const { login } = useContext(AuthContext);
   const { t } = useTranslation();
@@ -116,6 +116,6 @@ const Login = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Login;

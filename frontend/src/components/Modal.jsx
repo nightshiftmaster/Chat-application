@@ -18,7 +18,7 @@ import {
   selectors as channelSelector,
 } from '../slices/channelsSlice';
 
-const Modalwindow = () => {
+function Modalwindow() {
   const [text, setText] = useState('');
   const [error, setError] = useState('');
   const [disabled, setDisabled] = useState(false);
@@ -209,6 +209,6 @@ const Modalwindow = () => {
       </Modal.Footer>
     </Modal>
   );
-};
+}
 
 export default Modalwindow;

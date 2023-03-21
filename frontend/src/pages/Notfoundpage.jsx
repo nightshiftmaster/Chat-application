@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import image from '../assets/image-notfound.svg';
 
-const Notfound = () => {
+function Notfound() {
   const { t } = useTranslation();
   return (
     <div className="text-center">
@@ -19,6 +19,6 @@ const Notfound = () => {
       </p>
     </div>
   );
-};
+}
 
 export default Notfound;
