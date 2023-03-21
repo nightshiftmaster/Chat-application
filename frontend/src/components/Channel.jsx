@@ -3,14 +3,14 @@ import React from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { setActiveChannel, selectChannel } from '../slices/activeChannelSlice';
+import { setActiveChannel, selectChannel, channelsSelectors } from '../slices/activeChannelSlice';
 import { openModal } from '../slices/modalSlice';
 
 const Channel = ({ item }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { id, name, removable } = item;
-  const { activeChannel } = useSelector((state) => state.activeChannel);
+  const activeChannel = useSelector(channelsSelectors.selectActive);
 
   return (
     <li key={id} className="nav-item w-100">

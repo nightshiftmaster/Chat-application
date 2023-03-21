@@ -7,7 +7,7 @@ import modalReducer from './modalSlice';
 export default configureStore({
   reducer: {
     channels: channelReducer,
-    activeChannel: activeChannelReducer,
+    channel: activeChannelReducer,
     messages: messageReducer,
     modal: modalReducer,
   },

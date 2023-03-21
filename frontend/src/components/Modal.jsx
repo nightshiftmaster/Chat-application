@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
-import { setActiveChannel } from '../slices/activeChannelSlice';
+import { setActiveChannel, channelsSelectors } from '../slices/activeChannelSlice';
 import { closeModal } from '../slices/modalSlice';
 import socket from '../socket';
 import {
@@ -28,9 +28,8 @@ const Modalwindow = () => {
   const alreadyExists = useSelector(channelSelector.selectAll).map(
     ({ name }) => name,
   );
+  const selectedChannel = useSelector(channelsSelectors.selectChannel);
   const { isOpen, action } = useSelector((state) => state.modal);
-
-  const { selectedChannel } = useSelector((state) => state.activeChannel);
 
   const schema = yup
     .string()

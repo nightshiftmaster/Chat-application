@@ -22,7 +22,7 @@ import {
   selectors as messagesSelector,
 } from '../slices/messagesSlice';
 import { openModal } from '../slices/modalSlice';
-import { setActiveChannel } from '../slices/activeChannelSlice';
+import { setActiveChannel, channelsSelectors } from '../slices/activeChannelSlice';
 import routes from '../routes';
 
 const Main = () => {
@@ -32,7 +32,8 @@ const Main = () => {
 
   const channelsColl = useSelector(channelSelector.selectAll);
   const messagesColl = useSelector(messagesSelector.selectAll);
-  const { activeChannel } = useSelector((state) => state.activeChannel);
+  const activeChannel = useSelector(channelsSelectors.selectActive);
+
   const messagesPerChannel = messagesColl.filter(
     ({ channelId }) => channelId === activeChannel.id,
   );
