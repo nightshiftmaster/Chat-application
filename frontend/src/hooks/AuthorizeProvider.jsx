@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext(null);
 
-function AuthorizeProvider({ children }) {
+const AuthorizeProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -42,6 +42,6 @@ function AuthorizeProvider({ children }) {
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
 export { AuthorizeProvider, AuthContext };

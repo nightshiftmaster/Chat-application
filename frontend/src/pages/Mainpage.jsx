@@ -45,8 +45,8 @@ const Main = () => {
   }, []);
 
   useEffect(() => {
-    login(userId);
     const fetchChannels = async () => {
+      login(userId);
       const response = await axios
         .get(routes.usersPath(), getAuthHeaders())
         .catch((e) => e.message);
