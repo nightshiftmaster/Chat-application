@@ -10,4 +10,7 @@ parserOptions:
   sourceType: module
 plugins:
   - react
-rules: {}
+ignorePatterns: [build]
+rules: {
+  react/function-component-definition: 0
+}

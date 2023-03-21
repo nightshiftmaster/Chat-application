@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { setActiveChannel, selectChannel } from '../slices/activeChannelSlice';
 import { openModal } from '../slices/modalSlice';
 
-function Channel({ item }) {
+const Channel = ({ item }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { id, name, removable } = item;
@@ -66,5 +66,6 @@ function Channel({ item }) {
       </div>
     </li>
   );
-}
+};
+
 export default Channel;

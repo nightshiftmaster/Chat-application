@@ -7,11 +7,11 @@ import ReactScrollableFeed from 'react-scrollable-feed';
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
-import { io } from 'socket.io-client';
 import { AuthContext } from '../hooks/AuthorizeProvider';
 import Modalwindow from '../components/Modal';
 import Channel from '../components/Channel';
 import Message from '../components/Message';
+import socket from '../socket';
 import {
   addChannels,
   selectors as channelSelector,
@@ -25,9 +25,7 @@ import { openModal } from '../slices/modalSlice';
 import { setActiveChannel } from '../slices/activeChannelSlice';
 import routes from '../routes';
 
-const socket = io();
-
-function Main() {
+const Main = () => {
   const [text, setText] = useState('');
   const inputRef = useRef(null);
   const { login, userId, getAuthHeaders } = useContext(AuthContext);
@@ -182,6 +180,6 @@ function Main() {
       </div>
     </div>
   );
-}
+};
 
 export default Main;

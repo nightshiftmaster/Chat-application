@@ -8,9 +8,9 @@ import Form from 'react-bootstrap/Form';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
-import { io } from 'socket.io-client';
 import { setActiveChannel } from '../slices/activeChannelSlice';
 import { closeModal } from '../slices/modalSlice';
+import socket from '../socket';
 import {
   addChannel,
   renameChannel,
@@ -18,9 +18,7 @@ import {
   selectors as channelSelector,
 } from '../slices/channelsSlice';
 
-const socket = io();
-
-function Modalwindow() {
+const Modalwindow = () => {
   const [text, setText] = useState('');
   const [error, setError] = useState('');
   const [disabled, setDisabled] = useState(false);
@@ -211,6 +209,6 @@ function Modalwindow() {
       </Modal.Footer>
     </Modal>
   );
-}
+};
 
 export default Modalwindow;
