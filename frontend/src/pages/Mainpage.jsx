@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import axios from 'axios';
 import {
   React, useEffect, useState, useRef, useContext,
@@ -8,7 +7,7 @@ import ReactScrollableFeed from 'react-scrollable-feed';
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
-import { socket } from '../init';
+import { io } from 'socket.io-client';
 import { AuthContext } from '../hooks/AuthorizeProvider';
 import Modalwindow from '../components/Modal';
 import Channel from '../components/Channel';
@@ -26,6 +25,8 @@ import { openModal } from '../slices/modalSlice';
 import { setActiveChannel } from '../slices/activeChannelSlice';
 import routes from '../routes';
 
+const socket = io();
+
 function Main() {
   const [text, setText] = useState('');
   const inputRef = useRef(null);
@@ -33,7 +34,7 @@ function Main() {
 
   const channelsColl = useSelector(channelSelector.selectAll);
   const messagesColl = useSelector(messagesSelector.selectAll);
-  const activeChannel = useSelector((state) => state.activeChannel);
+  const { activeChannel } = useSelector((state) => state.activeChannel);
   const messagesPerChannel = messagesColl.filter(
     ({ channelId }) => channelId === activeChannel.id,
   );

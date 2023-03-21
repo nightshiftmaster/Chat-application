@@ -8,15 +8,17 @@ import Form from 'react-bootstrap/Form';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
+import { io } from 'socket.io-client';
 import { setActiveChannel } from '../slices/activeChannelSlice';
 import { closeModal } from '../slices/modalSlice';
-import { socket } from '../init';
 import {
   addChannel,
   renameChannel,
   removeChannel,
   selectors as channelSelector,
 } from '../slices/channelsSlice';
+
+const socket = io();
 
 function Modalwindow() {
   const [text, setText] = useState('');

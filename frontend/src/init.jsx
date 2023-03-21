@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import React from 'react';
 import { Provider } from 'react-redux';
 import { io } from 'socket.io-client';
