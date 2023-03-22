@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider, ErrorBoundary } from '@rollbar/react';
-import { init } from './init';
+import init from './init';
 
 const rollbarConfig = {
   accessToken: process.env.REACT_APP_SECRET_TOKEN,

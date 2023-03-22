@@ -7,18 +7,17 @@ import ReactScrollableFeed from 'react-scrollable-feed';
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
+import socket from '../socket';
 import { AuthContext } from '../hooks/AuthorizeProvider';
 import Modalwindow from '../components/Modal';
 import Channel from '../components/Channel';
 import Message from '../components/Message';
-import socket from '../socket';
 import {
   addChannels,
   selectors as channelSelector,
 } from '../slices/channelsSlice';
 import {
   addMessages,
-  addMessage,
   selectors as messagesSelector,
 } from '../slices/messagesSlice';
 import { openModal } from '../slices/modalSlice';
@@ -69,10 +68,6 @@ const Main = () => {
       channelId: activeChannel.id,
       username: userId.username,
     });
-    socket.on('newMessage', (message) => {
-      dispatch(addMessage(message));
-    });
-
     setText('');
   };
 

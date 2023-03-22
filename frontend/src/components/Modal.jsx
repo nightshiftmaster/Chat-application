@@ -8,15 +8,10 @@ import Form from 'react-bootstrap/Form';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
+import socket from '../socket';
 import { setActiveChannel, channelsSelectors } from '../slices/activeChannelSlice';
 import { closeModal } from '../slices/modalSlice';
-import socket from '../socket';
-import {
-  addChannel,
-  renameChannel,
-  removeChannel,
-  selectors as channelSelector,
-} from '../slices/channelsSlice';
+import { selectors as channelSelector } from '../slices/channelsSlice';
 
 const Modalwindow = () => {
   const [text, setText] = useState('');
@@ -49,10 +44,6 @@ const Modalwindow = () => {
     try {
       await schema.validate(censoredText);
       socket.emit('newChannel', { name: censoredText });
-      socket.on('newChannel', (payload) => {
-        dispatch(setActiveChannel(payload));
-        dispatch(addChannel(payload));
-      });
       toast.success(t('errors_feedbacks.toasts.createChannel'), {
         position: toast.POSITION.TOP_RIGHT,
       });
@@ -74,10 +65,6 @@ const Modalwindow = () => {
         id: selectedChannel.id,
         name: censoredText,
       });
-      socket.on('renameChannel', (payload) => {
-        const { id, name } = payload;
-        dispatch(renameChannel({ id, changes: { name } }));
-      });
       toast.success(t('errors_feedbacks.toasts.renameChannel'), {
         position: toast.POSITION.TOP_RIGHT,
       });
@@ -96,9 +83,6 @@ const Modalwindow = () => {
     socket.emit('removeChannel', { id: selectedChannel.id });
     toast.success(t('errors_feedbacks.toasts.removeChannel'), {
       position: toast.POSITION.TOP_RIGHT,
-    });
-    socket.on('removeChannel', (payload) => {
-      dispatch(removeChannel(payload));
     });
     dispatch(setActiveChannel({ id: 1, name: 'general' }));
     dispatch(closeModal());
