@@ -3,7 +3,7 @@ import {
   React, useRef, useEffect, useState,
 } from 'react';
 import {
-  Button, Modal,
+  Button, Modal, Form as FormReact,
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
@@ -60,9 +60,9 @@ const Rename = ({ onClose, modalData }) => {
 
           <Modal.Footer>
             <Form className="w-100" onSubmit={handleSubmit}>
-              <div className="visually-hidden" htmlFor="renameInput">
+              <FormReact.Label className="visually-hidden" htmlFor="text">
                 Имя канала
-              </div>
+              </FormReact.Label>
               <Field
                 innerRef={inputElement}
                 name="text"
