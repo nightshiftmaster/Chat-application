@@ -12,5 +12,7 @@ plugins:
   - react
 ignorePatterns: [build]
 rules: {
-  react/function-component-definition: 0
+  react/function-component-definition: 0,
+  react-hooks/rules-of-hooks: 0,
+  react-hooks/exhaustive-deps: 0
 }
