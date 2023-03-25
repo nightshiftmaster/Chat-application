@@ -7,22 +7,31 @@ import ReactScrollableFeed from 'react-scrollable-feed';
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
-import socket from '../socket';
+import socket from '../utils/socket';
 import { AuthContext } from '../hooks/AuthorizeProvider';
-import Modalwindow from '../components/Modal';
 import Channel from '../components/Channel';
 import Message from '../components/Message';
 import {
-  addChannels,
+  addChannels, setActiveChannel, channelsSelectors,
   selectors as channelSelector,
 } from '../slices/channelsSlice';
 import {
   addMessages,
   selectors as messagesSelector,
 } from '../slices/messagesSlice';
-import { openModal } from '../slices/modalSlice';
-import { setActiveChannel, channelsSelectors } from '../slices/activeChannelSlice';
+import { renderModal, onClose, modalDataSelector } from '../slices/modalSlice';
 import routes from '../routes';
+import getModals from '../components/modals';
+
+const openModal = () => {
+  const modalData = useSelector(modalDataSelector);
+  const { type } = modalData;
+  if (!type) {
+    return null;
+  }
+  const Component = getModals(type);
+  return <Component onClose={onClose} modalData={modalData} />;
+};
 
 const Main = () => {
   const [text, setText] = useState('');
@@ -39,6 +48,11 @@ const Main = () => {
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    const element = channelsColl.find(({ name }) => name === activeChannel.name);
+    dispatch(setActiveChannel(element));
+  }, [channelsColl]);
 
   useEffect(() => {
     inputRef.current.focus();
@@ -73,7 +87,7 @@ const Main = () => {
 
   return (
     <div className="d-flex flex-column bg-light">
-      <Modalwindow />
+      {openModal()}
       <ToastContainer />
       <div className="container my-4 rounded shadow">
         <div className="row bg-white flex-md-row" style={{ height: '85vh' }}>
@@ -83,7 +97,7 @@ const Main = () => {
               <button
                 type="button"
                 onClick={() => {
-                  dispatch(openModal('adding'));
+                  dispatch(renderModal({ action: 'adding', id: null }));
                 }}
                 className="p-0 text-primary btn btn-group-vertical"
               >

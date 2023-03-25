@@ -1,8 +1,9 @@
 import { io } from 'socket.io-client';
-import store from './slices';
-import { addMessage } from './slices/messagesSlice';
-import { addChannel, renameChannel, removeChannel } from './slices/channelsSlice';
-import { setActiveChannel } from './slices/activeChannelSlice';
+import store from '../slices';
+import { addMessage } from '../slices/messagesSlice';
+import {
+  addChannel, renameChannel, removeChannel,
+} from '../slices/channelsSlice';
 
 const socket = io();
 const { dispatch } = store;
@@ -12,7 +13,6 @@ socket.on('newMessage', (message) => {
 });
 
 socket.on('newChannel', (payload) => {
-  dispatch(setActiveChannel(payload));
   dispatch(addChannel(payload));
 });
 

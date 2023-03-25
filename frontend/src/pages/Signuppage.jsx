@@ -1,34 +1,20 @@
 import { React, useContext, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import routes from '../routes';
 import { AuthContext } from '../hooks/AuthorizeProvider';
+import { SignupSchema } from '../utils/validators';
 import image from '../assets/image-registration.jpg';
 
 const SignUp = () => {
   const { login } = useContext(AuthContext);
-  const [serverError, setServerError] = useState('');
+  const [serverError, setServerError] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
   const currLocation = location.state ? location.state.from.pathname : '/';
   const { t } = useTranslation();
-
-  const SignupSchema = Yup.object().shape({
-    username: Yup.string()
-      .min(3, t('errors_feedbacks.validate.name_length'))
-      .max(20, t('errors_feedbacks.validate.name_length'))
-      .required(t('errors_feedbacks.validate.field_required')),
-    password: Yup.string()
-      .min(6, t('errors_feedbacks.validate.password_length'))
-      .required(t('errors_feedbacks.validate.field_required')),
-    confirmPassword: Yup.string().oneOf(
-      [Yup.ref('password'), null],
-      t('errors_feedbacks.validate.passwords_did_match'),
-    ),
-  });
 
   return (
     <Formik

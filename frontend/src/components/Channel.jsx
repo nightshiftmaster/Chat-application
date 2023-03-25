@@ -3,8 +3,8 @@ import React from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { setActiveChannel, selectChannel, channelsSelectors } from '../slices/activeChannelSlice';
-import { openModal } from '../slices/modalSlice';
+import { setActiveChannel, selectChannel, channelsSelectors } from '../slices/channelsSlice';
+import { renderModal } from '../slices/modalSlice';
 
 const Channel = ({ item }) => {
   const { t } = useTranslation();
@@ -51,7 +51,7 @@ const Channel = ({ item }) => {
                       name,
                       removable,
                     }));
-                    dispatch(openModal(action));
+                    dispatch(renderModal({ action, item: { id, name } }));
                   }}
                 >
                   <span>

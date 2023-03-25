@@ -9,7 +9,7 @@ import { AuthContext } from '../hooks/AuthorizeProvider';
 import image from '../assets/image-login.jpeg';
 
 const Login = () => {
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
   const { login } = useContext(AuthContext);
   const { t } = useTranslation();
 

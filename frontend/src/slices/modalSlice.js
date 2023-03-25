@@ -3,20 +3,23 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const modalSlice = createSlice({
   name: 'modal',
-  initialState: { isOpen: false, action: 'adding' },
+  initialState: { item: null, type: null },
   reducers: {
-    openModal(state, { payload }) {
-      state.isOpen = true;
-      state.action = payload;
+    renderModal(state, { payload }) {
+      const { action, item } = payload;
+      state.item = item;
+      state.type = action;
     },
-    closeModal(state) {
-      state.isOpen = false;
+    onClose(state) {
+      state.item = null;
+      state.type = null;
     },
   },
 
 });
 
 export default modalSlice.reducer;
+export const modalDataSelector = ((state) => state.modal);
 export const {
-  openModal, closeModal,
+  renderModal, onClose,
 } = modalSlice.actions;
