@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import {
-  React, useRef, useEffect, useState,
+  React, useState,
 } from 'react';
 import {
   Button, Modal, Form as FormReact,
@@ -18,7 +18,6 @@ const Rename = ({ onClose, modalData }) => {
   const { t } = useTranslation();
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
-  const inputElement = useRef(null);
   filter.loadDictionary('ru');
 
   const submitForm = async ({ text }) => {
@@ -37,10 +36,6 @@ const Rename = ({ onClose, modalData }) => {
       setError(e.message);
     }
   };
-
-  useEffect(() => {
-    inputElement.current?.focus();
-  }, []);
 
   return (
     <Formik
@@ -64,7 +59,6 @@ const Rename = ({ onClose, modalData }) => {
                 Имя канала
               </FormReact.Label>
               <Field
-                innerRef={inputElement}
                 name="text"
                 className={`form-control ${
                   error

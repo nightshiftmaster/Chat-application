@@ -23,7 +23,7 @@ import { renderModal, onClose, modalDataSelector } from '../slices/modalSlice';
 import routes from '../routes';
 import getModals from '../components/modals';
 
-const openModal = () => {
+const OpenModal = () => {
   const modalData = useSelector(modalDataSelector);
   const { type } = modalData;
   if (!type) {
@@ -87,7 +87,7 @@ const Main = () => {
 
   return (
     <div className="d-flex flex-column bg-light">
-      {openModal()}
+      {OpenModal()}
       <ToastContainer />
       <div className="container my-4 rounded shadow">
         <div className="row bg-white flex-md-row" style={{ height: '85vh' }}>
