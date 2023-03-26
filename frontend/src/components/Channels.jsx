@@ -1,18 +1,25 @@
-/* eslint-disable react/prop-types */
-import React from 'react';
+import { React, useEffect } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { setActiveChannel, selectChannel, channelsSelectors } from '../slices/channelsSlice';
+import {
+  setActiveChannel, selectChannel, channelSelector, channelControlSelector,
+} from '../slices/channelsSlice';
 import { renderModal } from '../slices/modalSlice';
 
-const Channel = ({ item }) => {
+const Channels = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { id, name, removable } = item;
-  const activeChannel = useSelector(channelsSelectors.selectActive);
 
-  return (
+  const channels = useSelector(channelSelector.selectAll);
+  const activeChannel = useSelector(channelControlSelector.selectActive);
+
+  useEffect(() => {
+    const element = channels.find(({ name }) => name === activeChannel.name);
+    dispatch(setActiveChannel(element));
+  }, [channels]);
+
+  return channels.map(({ id, name, removable }) => (
     <li key={id} className="nav-item w-100">
       <div
         role="group"
@@ -65,7 +72,7 @@ const Channel = ({ item }) => {
         ) : null}
       </div>
     </li>
-  );
+  ));
 };
 
-export default Channel;
+export default Channels;

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {
-  React, useEffect, useState, useRef, useContext,
+  React, Suspense, useEffect, useState, useRef, useContext, lazy,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactScrollableFeed from 'react-scrollable-feed';
@@ -9,19 +9,14 @@ import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
 import socket from '../utils/socket';
 import { AuthContext } from '../hooks/AuthorizeProvider';
-import Channel from '../components/Channel';
-import Message from '../components/Message';
-import {
-  addChannels, setActiveChannel, channelsSelectors,
-  selectors as channelSelector,
-} from '../slices/channelsSlice';
-import {
-  addMessages,
-  selectors as messagesSelector,
-} from '../slices/messagesSlice';
+import { addChannels, setActiveChannel, channelControlSelector } from '../slices/channelsSlice';
+import { addMessages } from '../slices/messagesSlice';
 import { renderModal, onClose, modalDataSelector } from '../slices/modalSlice';
 import routes from '../routes';
 import getModals from '../components/modals';
+
+const Channels = lazy(() => import('../components/Channels'));
+const Messages = lazy(() => import('../components/Messages'));
 
 const OpenModal = () => {
   const modalData = useSelector(modalDataSelector);
@@ -35,24 +30,14 @@ const OpenModal = () => {
 
 const Main = () => {
   const [text, setText] = useState('');
+  const [messageCount, setMessageCount] = useState(0);
   const inputRef = useRef(null);
   const { login, userId, getAuthHeaders } = useContext(AuthContext);
 
-  const channelsColl = useSelector(channelSelector.selectAll);
-  const messagesColl = useSelector(messagesSelector.selectAll);
-  const activeChannel = useSelector(channelsSelectors.selectActive);
-
-  const messagesPerChannel = messagesColl.filter(
-    ({ channelId }) => channelId === activeChannel.id,
-  );
+  const activeChannel = useSelector(channelControlSelector.selectActive);
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
-  useEffect(() => {
-    const element = channelsColl.find(({ name }) => name === activeChannel.name);
-    dispatch(setActiveChannel(element));
-  }, [channelsColl]);
 
   useEffect(() => {
     inputRef.current.focus();
@@ -116,12 +101,9 @@ const Main = () => {
             </div>
             <ReactScrollableFeed>
               <ul className="nav flex-column nav-pills nav-fill px-2 mb-3  d-block">
-                {channelsColl.map((item) => (
-                  <Channel
-                    key={item.id}
-                    item={item}
-                  />
-                ))}
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Channels />
+                </Suspense>
               </ul>
             </ReactScrollableFeed>
           </div>
@@ -137,15 +119,15 @@ const Main = () => {
                 </p>
                 <span className="text-muted">
                   {t('messages_count.message', {
-                    count: messagesPerChannel.length,
+                    count: messageCount,
                   })}
                 </span>
               </div>
               <ReactScrollableFeed>
                 <div id="messages-box" className="chat-messages px-5">
-                  {messagesPerChannel.map((element) => (
-                    <Message key={element.id} element={element} />
-                  ))}
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <Messages setMessageCount={setMessageCount} />
+                  </Suspense>
                 </div>
               </ReactScrollableFeed>
               <div className="mt-auto px-5 py-3">
