@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import image from '../assets/image-notfound.svg';
+import image from '../../assets/image-notfound.svg';
 
 const Notfound = () => {
   const { t } = useTranslation();

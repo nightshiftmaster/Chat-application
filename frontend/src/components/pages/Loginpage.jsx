@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import routes from '../routes';
-import { AuthContext } from '../hooks/AuthorizeProvider';
-import image from '../assets/image-login.jpeg';
+import routes from '../../routes';
+import { AuthContext } from '../../hooks/AuthorizeProvider';
+import image from '../../assets/image-login.jpeg';
 
 const Login = () => {
   const [error, setError] = useState(null);
@@ -31,7 +31,7 @@ const Login = () => {
     },
     onSubmit: (formData) => axios.post(routes.loginPath(), formData)
       .then((response) => login(response.data))
-      .catch((e) => (!e.response.status ? errors.netWorkError() : errors[e.response.status]())),
+      .catch((e) => (!e.response ? errors.netWorkError() : errors[e.response.status]())),
   });
 
   return (

@@ -4,9 +4,9 @@ import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import routes from '../routes';
-import { AuthContext } from '../hooks/AuthorizeProvider';
-import image from '../assets/image-registration.jpg';
+import routes from '../../routes';
+import { AuthContext } from '../../hooks/AuthorizeProvider';
+import image from '../../assets/image-registration.jpg';
 
 const SignUp = () => {
   const { login } = useContext(AuthContext);

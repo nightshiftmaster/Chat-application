@@ -7,16 +7,16 @@ import ReactScrollableFeed from 'react-scrollable-feed';
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
-import { socket } from '../init';
-import { AuthContext } from '../hooks/AuthorizeProvider';
-import { addChannels, setActiveChannel, channelControlSelector } from '../slices/channelsSlice';
-import { addMessages } from '../slices/messagesSlice';
-import { renderModal, onClose, modalDataSelector } from '../slices/modalSlice';
-import routes from '../routes';
-import getModals from '../components/modals';
+import { socket } from '../../init';
+import { AuthContext } from '../../hooks/AuthorizeProvider';
+import { addChannels, setActiveChannel, channelControlSelector } from '../../slices/channelsSlice';
+import { addMessages } from '../../slices/messagesSlice';
+import { renderModal, onClose, modalDataSelector } from '../../slices/modalSlice';
+import routes from '../../routes';
+import getModals from '../modals';
 
-const Channels = lazy(() => import('../components/Channels'));
-const Messages = lazy(() => import('../components/Messages'));
+const Channels = lazy(() => import('../Channels'));
+const Messages = lazy(() => import('../Messages'));
 
 const OpenModal = () => {
   const modalData = useSelector(modalDataSelector);

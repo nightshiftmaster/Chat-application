@@ -12,6 +12,7 @@ import {
 } from './slices/channelsSlice';
 
 const socket = io();
+
 const { dispatch } = store;
 
 socket.on('newMessage', (message) => {
