@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import '../App.css';
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';

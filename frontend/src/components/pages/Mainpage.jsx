@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import axios from 'axios';
 import {
   React, Suspense, useEffect, useState, useRef, useContext, lazy,
