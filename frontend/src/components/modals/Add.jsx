@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+/* eslint-disable import/no-cycle */
 import {
   React, useRef, useEffect, useState,
 } from 'react';

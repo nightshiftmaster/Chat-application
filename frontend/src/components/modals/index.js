@@ -1,3 +1,5 @@
+/* eslint-disable import/no-cycle */
+
 import Add from './Add';
 import Rename from './Rename';
 import Remove from './Remove';

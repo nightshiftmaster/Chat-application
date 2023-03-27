@@ -11,6 +11,7 @@ parserOptions:
 plugins:
   - react
 rules: {
+  import/no-cycle: 0,
   react/function-component-definition: 0, 
   react-hooks/rules-of-hooks: 0, 
   react-hooks/exhaustive-deps: 0
