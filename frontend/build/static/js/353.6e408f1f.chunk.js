@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkfrontend=self.webpackChunkfrontend||[]).push([[353],{9353:function(e,n,t){t.r(n);var r=t(2791),s=t(9434),c=t(6761),u=t(9227),f=t(184);n.default=function(e){var n=e.setMessageCount,t=(0,s.v9)(c.px.selectAll),i=(0,s.v9)(u.Cz.selectActive),l=t.filter((function(e){return e.channelId===i.id}));return(0,r.useEffect)((function(){n(l.length)}),[l]),l.map((function(e){return(0,f.jsxs)("div",{className:"text-break mb-2",children:[(0,f.jsx)("b",{children:e.username}),":"," ",e.body]},e.id)}))}}}]);
-//# sourceMappingURL=353.6e408f1f.chunk.js.map
