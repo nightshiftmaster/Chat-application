@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "description": "slack-chat application",
   "main": "index.js",
-  "packageManager": "pnpm@7.5.1",
   "scripts": {
     "build": "npm run build --prefix frontend",
-    "start": "npx start-server -s ./frontend/build",
+    "start": "npx start-server & npm -C frontend start",
     "postinstall": "cd frontend && npm ci"
   },
   "repository": {
