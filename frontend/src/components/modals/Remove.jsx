@@ -8,7 +8,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import socket from '../../utils/socket';
+import { socket } from '../../init';
 import { setActiveChannel } from '../../slices/channelsSlice';
 
 const Remove = ({ onClose, modalData }) => {

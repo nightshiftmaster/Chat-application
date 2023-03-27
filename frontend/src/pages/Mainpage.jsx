@@ -7,7 +7,7 @@ import ReactScrollableFeed from 'react-scrollable-feed';
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
-import socket from '../utils/socket';
+import { socket } from '../init';
 import { AuthContext } from '../hooks/AuthorizeProvider';
 import { addChannels, setActiveChannel, channelControlSelector } from '../slices/channelsSlice';
 import { addMessages } from '../slices/messagesSlice';

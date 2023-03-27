@@ -1,4 +1,4 @@
-import { React, useEffect } from 'react';
+import { React } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -14,11 +14,6 @@ const Channels = () => {
   const channels = useSelector(channelSelector.selectAll);
   const activeChannel = useSelector(channelControlSelector.selectActive);
 
-  useEffect(() => {
-    const element = channels.find(({ name }) => name === activeChannel.name);
-    dispatch(setActiveChannel(element));
-  }, [channels]);
-
   return channels.map(({ id, name, removable }) => (
     <li key={id} className="nav-item w-100">
       <div
@@ -29,7 +24,7 @@ const Channels = () => {
           onClick={() => dispatch(setActiveChannel({ id, name, removable }))}
           type="button"
           className={`w-100 rounded-0 text-start text-truncate btn ${
-            activeChannel.id === id ? 'btn-secondary' : ''
+            activeChannel.id === id || activeChannel.name === name ? 'btn-secondary' : ''
           }`}
         >
           <span className="me-1">#</span>

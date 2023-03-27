@@ -6,12 +6,13 @@ import {
   Button, Modal, Form as FormReact,
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import * as yup from 'yup';
+import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import filter from 'leo-profanity';
 import { toast } from 'react-toastify';
-import { ModalInputSchema } from '../../utils/validators';
-import socket from '../../utils/socket';
+import { channelSelector } from '../../slices/channelsSlice';
+import { socket } from '../../init';
 
 const Rename = ({ onClose, modalData }) => {
   const { item } = modalData;
@@ -20,10 +21,24 @@ const Rename = ({ onClose, modalData }) => {
   const dispatch = useDispatch();
   filter.loadDictionary('ru');
 
+  const alreadyExists = useSelector(channelSelector.selectAll).map(
+    ({ name }) => name,
+  );
+
+  const schema = yup
+    .string()
+    .required(t('errors_feedbacks.validate.field_required'))
+    .min(3, t('errors_feedbacks.validate.name_length'))
+    .max(20, t('errors_feedbacks.validate.name_length'))
+    .notOneOf(
+      alreadyExists,
+      t('errors_feedbacks.validate.uniqueName_required'),
+    );
+
   const submitForm = async ({ text }) => {
     const censoredText = filter.clean(text.trim());
     try {
-      await ModalInputSchema(censoredText);
+      await schema.validate(censoredText);
       socket.emit('renameChannel', {
         id: item.id,
         name: censoredText,

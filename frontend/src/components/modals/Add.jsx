@@ -6,13 +6,13 @@ import {
   Button, Modal, Form as FormReact,
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import filter from 'leo-profanity';
 import { toast } from 'react-toastify';
-import { ModalInputSchema } from '../../utils/validators';
-import socket from '../../utils/socket';
-import { setActiveChannel } from '../../slices/channelsSlice';
+import * as yup from 'yup';
+import { socket } from '../../init';
+import { setActiveChannel, channelSelector } from '../../slices/channelsSlice';
 
 const Add = ({ onClose }) => {
   const { t } = useTranslation();
@@ -21,10 +21,24 @@ const Add = ({ onClose }) => {
   const inputElement = useRef(null);
   filter.loadDictionary('ru');
 
+  const alreadyExists = useSelector(channelSelector.selectAll).map(
+    ({ name }) => name,
+  );
+
+  const schema = yup
+    .string()
+    .required(t('errors_feedbacks.validate.field_required'))
+    .min(3, t('errors_feedbacks.validate.name_length'))
+    .max(20, t('errors_feedbacks.validate.name_length'))
+    .notOneOf(
+      alreadyExists,
+      t('errors_feedbacks.validate.uniqueName_required'),
+    );
+
   const submitForm = async ({ text }) => {
     const censoredText = filter.clean(text.trim());
     try {
-      await ModalInputSchema(censoredText);
+      await schema.validate(censoredText);
       socket.emit('newChannel', { name: censoredText });
       toast.success(t('errors_feedbacks.toasts.createChannel'), {
         position: toast.POSITION.TOP_RIGHT,
