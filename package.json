@@ -4,7 +4,7 @@
   "description": "slack-chat application",
   "main": "index.js",
   "scripts": {
-    "build": "npm run build",
+    "build": "npm run build --prefix frontend",
     "start": "npx start-server -s ./frontend/build",
     "postinstall": "cd frontend && npm ci"
   },
@@ -25,8 +25,6 @@
   },
   "homepage": "https://github.com/nightshiftmaster/frontend-project-12#readme",
   "dependencies": {
-    "@hexlet/chat-server": "^1.1.6",
-    "@rollbar/react": "^0.11.1",
-    "rollbar": "^2.26.1"
+    "@hexlet/chat-server": "^1.1.6"
   }
 }
