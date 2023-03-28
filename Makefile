@@ -13,8 +13,5 @@ start-frontend:
 start-backend:
 	npx start-server
 
-deploy:
-	git push heroku main
-
 start:
 	npx start-server & npm -C frontend start
