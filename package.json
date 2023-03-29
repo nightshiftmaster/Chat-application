@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run build --prefix frontend",
     "start": "npx start-server -s ./frontend/build",
-    "postinstall": "cd frontend && npm ci"
+    "postinstall": "cd frontend && npm i"
   },
   "repository": {
     "type": "git",

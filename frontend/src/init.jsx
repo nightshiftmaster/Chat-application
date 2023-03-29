@@ -12,6 +12,8 @@ import {
   addChannel, renameChannel, removeChannel,
 } from './slices/channelsSlice';
 
+console.log(store.subscribe(addChannel));
+
 const socket = io();
 
 const { dispatch } = store;
