@@ -13,7 +13,12 @@ import filter from 'leo-profanity';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import { socket } from '../../init';
-import { setActiveChannel, channelSelector } from '../../slices/channelsSlice';
+import { channelSelector, setActiveChannel } from '../../slices/channelsSlice';
+
+const promiseEmitSocket = (event, data) => new Promise((resolve, reject) => {
+  socket.emit(event, data, (response) => resolve(response));
+  socket.on('err', (err) => reject(err));
+});
 
 const Add = ({ onClose }) => {
   const { t } = useTranslation();
@@ -21,7 +26,6 @@ const Add = ({ onClose }) => {
   const dispatch = useDispatch();
   const inputElement = useRef(null);
   filter.loadDictionary('ru');
-
   const alreadyExists = useSelector(channelSelector.selectAll).map(
     ({ name }) => name,
   );
@@ -40,11 +44,13 @@ const Add = ({ onClose }) => {
     const censoredText = filter.clean(text.trim());
     try {
       await schema.validate(censoredText);
-      socket.emit('newChannel', { name: censoredText });
-      toast.success(t('errors_feedbacks.toasts.createChannel'), {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-      dispatch(setActiveChannel({ name: censoredText }));
+      promiseEmitSocket('newChannel', { name: censoredText })
+        .then((response) => {
+          dispatch(setActiveChannel(response.data));
+          toast.success(t('errors_feedbacks.toasts.createChannel'), {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+        });
       dispatch(onClose());
     } catch (e) {
       setError(e.message);

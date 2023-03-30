@@ -10,8 +10,11 @@ import { useTranslation } from 'react-i18next';
 import filter from 'leo-profanity';
 import { socket } from '../../init';
 import { AuthContext } from '../../hooks/AuthorizeProvider';
-import { addChannels, setActiveChannel, channelControlSelector } from '../../slices/channelsSlice';
+import {
+  addChannels, setActiveChannel, channelControlSelector,
+} from '../../slices/channelsSlice';
 import { addMessages } from '../../slices/messagesSlice';
+import activeChannelMessagesSelector from '../../slices/commonSelectors';
 import { renderModal, onClose, modalDataSelector } from '../../slices/modalSlice';
 import routes from '../../routes';
 import getModals from '../modals';
@@ -31,11 +34,11 @@ const OpenModal = () => {
 
 const Main = () => {
   const [text, setText] = useState('');
-  const [messageCount, setMessageCount] = useState(0);
   const inputRef = useRef(null);
   const { login, userId, getAuthHeaders } = useContext(AuthContext);
 
   const activeChannel = useSelector(channelControlSelector.selectActive);
+  const messagesCount = useSelector(activeChannelMessagesSelector).length;
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -120,14 +123,14 @@ const Main = () => {
                 </p>
                 <span className="text-muted">
                   {t('messages_count.message', {
-                    count: messageCount,
+                    count: messagesCount,
                   })}
                 </span>
               </div>
               <ReactScrollableFeed>
                 <div id="messages-box" className="chat-messages px-5">
                   <Suspense fallback={<div>Loading...</div>}>
-                    <Messages setMessageCount={setMessageCount} />
+                    <Messages />
                   </Suspense>
                 </div>
               </ReactScrollableFeed>

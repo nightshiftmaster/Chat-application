@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import { React } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,7 +25,7 @@ const Channels = () => {
           onClick={() => dispatch(setActiveChannel({ id, name, removable }))}
           type="button"
           className={`w-100 rounded-0 text-start text-truncate btn ${
-            activeChannel.id === id || activeChannel.name === name ? 'btn-secondary' : ''
+            activeChannel.id === id ? 'btn-secondary' : ''
           }`}
         >
           <span className="me-1">#</span>
